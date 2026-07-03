@@ -167,3 +167,29 @@ Remote branch URL suggested by GitHub:
 - `docs/codex-auto-commit-policy.md` was corrected to use the branch format `task/<task-id-lowercase-title>` and the push command format `git push -u origin <task-branch-name>`.
 - The policy now explicitly states that Codex cannot directly push `main`, cannot automatically merge `main`, and that ChatGPT review is required before a main merge.
 - This fixup contains no code implementation, no .NET project creation, no GUI work, no PacketCodec work, no TCP Host work, and no gameplay systems.
+
+## ChatGPT Review Fixup
+
+ChatGPT reviewed the remote task branch and requested a small documentation fixup before merging.
+
+Fixes made:
+
+* Updated `ai/context/latest-status.md` so the latest completed task is TASK-0009 and the next suggested task is TASK-0010.
+* Fixed `docs/codex-auto-commit-policy.md` so the branch format and push command are complete.
+* No server code, GUI code, PacketCodec, TCP host, gameplay logic, client resources, reference server source, binaries, or databases were added.
+
+## Fixup Commands Run
+
+* `git checkout task/0009-local-intake-and-architecture-v2`: succeeded; branch was already checked out.
+* `git pull origin task/0009-local-intake-and-architecture-v2`: failed with `OpenSSL SSL_read: Connection was reset, errno 10054`.
+* `git status --short`: clean before the fixup edits.
+* `git log --oneline --decorate -5`: confirmed local branch head was `7cb4a5d`.
+* `dotnet build`: failed from repository root with MSB1003 because the root directory has no project or solution file.
+* `dotnet test`: failed from repository root with MSB1003 because the root directory has no project or solution file.
+* `dotnet build .\src\PlServer.sln`: succeeded with a warning that no restoreable projects exist.
+* `dotnet test .\src\PlServer.sln`: exited successfully with a warning that no restoreable projects exist.
+* `git diff --stat`: run for this fixup; confirmed only the allowed documentation files changed.
+
+## Fixup Push Result
+
+Pending before commit. Final push result is recorded in terminal output after `git push -u origin task/0009-local-intake-and-architecture-v2`.

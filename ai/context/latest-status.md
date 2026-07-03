@@ -20,10 +20,11 @@ Prepare to create the real .NET project skeleton in TASK-0010.
 
 ## Current Constraints
 
-- Do not implement gameplay before protocol framing/logging/replay/session/resource foundations.
-- Do not add client resources or copied reference-server source.
-- Protocol facts must keep source labels.
-- Reference behavior cannot be marked confirmed without target-client trace.
+* Do not implement gameplay before protocol framing, logging, replay, session, and resource foundations.
+* Do not add client resources or copied reference-server source.
+* Protocol facts must keep source labels.
+* Reference behavior cannot be marked confirmed without target-client trace.
+* Codex may commit and push task branches, but must not merge `main` without ChatGPT review approval.
 
 ## Next Suggested Task
 
