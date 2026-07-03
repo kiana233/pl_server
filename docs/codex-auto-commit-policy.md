@@ -1,5 +1,7 @@
 # Codex Auto Commit Policy
 
+This document defines how Codex may commit and push task work for this repository.
+
 ## Branch Rule
 
 Each task gets one task branch.
@@ -14,13 +16,11 @@ Example:
 
 `task/0009-local-intake-and-architecture-v2`
 
-Each task must produce one task branch, one report, one `current-state` update, and one primary task commit.
-
 ## Merge Rule
 
 Codex must not automatically merge task branches into `main`.
 
-The human owner controls final merge after ChatGPT review approval.
+The human owner controls the final merge after ChatGPT review approval.
 
 ## Commit Message Format
 
@@ -30,15 +30,30 @@ If none is provided, use:
 
 `TASK-XXXX short task summary`
 
+Example:
+
+`TASK-0009 local intake and architecture v2`
+
 ## Push Target
 
-Push to `origin` using the task branch:
+Push to `origin` using the current task branch:
 
 `git push -u origin <task-branch-name>`
 
 Example:
 
 `git push -u origin task/0009-local-intake-and-architecture-v2`
+
+## Required Files Per Task
+
+Each task should produce or update:
+
+* one task file under `ai/tasks/`
+* one report under `ai/reports/`
+* `ai/context/current-state.md`
+* implementation, tests, or documentation required by the task
+
+Follow-up review fixups may add small additional commits on the same task branch.
 
 ## Pre-Commit Checks
 

@@ -199,3 +199,30 @@ Push failed:
 `fatal: unable to access 'https://github.com/kiana233/pl_server.git/': Failed to connect to github.com port 443 after 21126 ms: Timed out`
 
 No repeated push attempts were made after the network timeout.
+
+## ChatGPT Review Fixup
+
+ChatGPT reviewed the remote task branch and requested a documentation fixup before merging TASK-0009 into `main`.
+
+Fixes made in this follow-up commit:
+
+* Confirmed `ai/context/latest-status.md` now points to TASK-0009 as completed and TASK-0010 as the next suggested task.
+* Rewrote `docs/codex-auto-commit-policy.md` to remove incomplete placeholders.
+* Documented the complete branch format: `task/<task-id-lowercase-title>`.
+* Documented the complete push command: `git push -u origin <task-branch-name>`.
+* Confirmed Codex must not push directly to `main` and must not merge task branches into `main` without ChatGPT approval.
+
+No server code, GUI code, PacketCodec, TCP host, gameplay logic, client resources, reference server source, binaries, or databases were added.
+
+## Fixup Commands Run
+
+* `git checkout task/0009-local-intake-and-architecture-v2`: succeeded; branch was already checked out.
+* `git pull origin task/0009-local-intake-and-architecture-v2`: failed with `OpenSSL SSL_read: Connection was reset, errno 10054`.
+* `git status --short`: clean before editing; later showed only the allowed two files changed.
+* `git diff --stat`: confirmed only `docs/codex-auto-commit-policy.md` and `ai/reports/REPORT-0009-local-intake-and-architecture-v2.md` changed.
+* `dotnet build .\src\PlServer.sln`: succeeded with a warning that no restoreable projects exist.
+* `dotnet test .\src\PlServer.sln`: exited successfully with a warning that no restoreable projects exist.
+
+## Fixup Push Result
+
+Pending before commit. Final push result is recorded in terminal output after `git push -u origin task/0009-local-intake-and-architecture-v2`.
