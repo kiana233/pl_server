@@ -1,0 +1,48 @@
+# IDE
+.idea/
+.vs/
+.vscode/
+
+# Build output
+bin/
+obj/
+out/
+dist/
+TestResults/
+coverage/
+*.user
+*.suo
+*.cache
+
+# Logs and local runtime state
+*.log
+logs/
+tmp/
+temp/
+
+# Secrets
+.env
+.env.*
+*.pfx
+*.key
+*.pem
+secrets.*
+
+# Client binaries and copyrighted resources must not enter this repository.
+client/
+Client/
+Data/
+Map/
+Maps/
+Item/
+Npc/
+Skill/
+Resources/
+*.exe
+*.dll
+*.dat
+
+# Allow explicitly curated trace folders, but keep raw captures out by default.
+traces/raw/
+*.pcap
+*.pcapng
