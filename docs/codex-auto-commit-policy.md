@@ -6,11 +6,17 @@ Each task gets one task branch. Codex must not commit task work directly to `mai
 
 Branch format:
 
-`task/<task-id-lowercase-description>`
+`task/<task-id-lowercase-title>`
+
+Example:
+
+`task/0009-local-intake-and-architecture-v2`
+
+Each task must produce one task branch, one report under `ai/reports/`, one `ai/context/current-state.md` update, and one primary task commit. Follow-up review fixups may add small additional commits on the same task branch.
 
 ## Merge Rule
 
-Codex must not automatically merge task branches into `main`. The human owner controls final merge after review.
+Codex must not automatically merge task branches into `main`. Codex also must not directly push `main`. ChatGPT must review the task branch before any `main` merge is allowed, and the human owner controls the final merge.
 
 ## Commit Message Format
 
@@ -22,7 +28,7 @@ Use the task-provided commit message. If none is provided, use:
 
 Push to `origin` using the task branch:
 
-`git push -u origin <task-branch>`
+`git push -u origin <task-branch-name>`
 
 ## Pre-Commit Checks
 

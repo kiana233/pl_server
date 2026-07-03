@@ -143,7 +143,9 @@ TASK-0010-create-dotnet-project-skeleton
 
 Initial TASK-0009 local intake commit: `f52516a`.
 
-Push-result recording commit is created after this report update and is recorded in the final task output.
+Push-result recording commit: `01cad8c`.
+
+Final fixup commit hash printed in terminal output.
 
 ## Push Result
 
@@ -158,3 +160,10 @@ Follow-up push check on 2026-07-03 succeeded:
 Remote branch URL suggested by GitHub:
 
 `https://github.com/kiana233/pl_server/pull/new/task/0009-local-intake-and-architecture-v2`
+
+## ChatGPT Review Fixup
+
+- `ai/context/latest-status.md` was updated so later continue flows do not misread TASK-0002 as the active task.
+- `docs/codex-auto-commit-policy.md` was corrected to use the branch format `task/<task-id-lowercase-title>` and the push command format `git push -u origin <task-branch-name>`.
+- The policy now explicitly states that Codex cannot directly push `main`, cannot automatically merge `main`, and that ChatGPT review is required before a main merge.
+- This fixup contains no code implementation, no .NET project creation, no GUI work, no PacketCodec work, no TCP Host work, and no gameplay systems.

@@ -1,30 +1,30 @@
 # Latest Status
 
-Date: 2026-07-02
+Date: 2026-07-03
 
 ## Phase
 
-Phase 0: AI-Codex workflow bootstrap completed.
+Phase 0 / Architecture and Local Intake completed.
 
 ## Last Completed Task
 
-`ai/tasks/TASK-0001-bootstrap.md`
+`ai/tasks/TASK-0009-local-intake-and-architecture-v2.md`
 
 ## Active Task
 
-`ai/tasks/TASK-0002-reference-analysis.md`
+None. Waiting for ChatGPT review and TASK-0010 creation.
 
 ## Current Goal
 
-Run reference-server analysis without copying implementation code or client resources.
+Prepare to create the real .NET project skeleton in TASK-0010.
 
 ## Current Constraints
 
-- Do not implement server code yet.
-- Do not add client binaries or copyrighted client resources.
-- Do not add private account data, tokens, or raw packet captures.
-- Protocol facts must be labeled as reference facts, client-trace facts, or assumptions.
+- Do not implement gameplay before protocol framing/logging/replay/session/resource foundations.
+- Do not add client resources or copied reference-server source.
+- Protocol facts must keep source labels.
+- Reference behavior cannot be marked confirmed without target-client trace.
 
 ## Next Suggested Task
 
-`ai/tasks/TASK-0002-reference-analysis.md`
+`TASK-0010-create-dotnet-project-skeleton`
