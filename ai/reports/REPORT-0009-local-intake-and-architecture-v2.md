@@ -141,14 +141,20 @@ TASK-0010-create-dotnet-project-skeleton
 
 ## Commit Hash
 
-Initial local commit before recording push failure: `47982e0`.
+Initial TASK-0009 local intake commit: `f52516a`.
 
-Final local commit hash is recorded in the final task output because a commit cannot contain its own final hash after amending this report.
+Push-result recording commit is created after this report update and is recorded in the final task output.
 
 ## Push Result
 
-Push failed on the first attempt:
+Initial push during the first TASK-0009 execution failed:
 
 `fatal: unable to access 'https://github.com/kiana233/pl_server.git/': OpenSSL SSL_read: Connection was reset, errno 10054`
 
-No repeated push attempts were made after the failure, per task instructions.
+Follow-up push check on 2026-07-03 succeeded:
+
+`task/0009-local-intake-and-architecture-v2 -> task/0009-local-intake-and-architecture-v2`
+
+Remote branch URL suggested by GitHub:
+
+`https://github.com/kiana233/pl_server/pull/new/task/0009-local-intake-and-architecture-v2`
