@@ -10,7 +10,7 @@ Codex must not commit task work directly to `main`.
 
 Branch format:
 
-`task/<task-id-lowercase-title>`
+`task/TASK_ID_LOWERCASE_TITLE`
 
 Example:
 
@@ -26,7 +26,7 @@ The human owner controls the final merge after ChatGPT review approval.
 
 Use the task-provided commit message.
 
-If none is provided, use:
+If no commit message is provided, use:
 
 `TASK-XXXX short task summary`
 
@@ -36,9 +36,11 @@ Example:
 
 ## Push Target
 
-Push to `origin` using the current task branch:
+Push to `origin` using the current task branch.
 
-`git push -u origin <task-branch-name>`
+Command format:
+
+`git push -u origin TASK_BRANCH_NAME`
 
 Example:
 

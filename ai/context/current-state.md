@@ -46,7 +46,7 @@ Phase 0 / Architecture and Local Intake
 - Real target-client packet traces are not yet available in this repository, so protocol behavior cannot be marked `confirmed`.
 - Root-level `dotnet build` and `dotnet test` fail because no project or solution file exists at the repository root.
 - `src/PlServer.sln` has no projects yet, so it only validates an empty solution.
-- `ai/context/latest-status.md` still names `TASK-0002-reference-analysis.md` as active, while this intake task creates and executes `TASK-0009-local-intake-and-architecture-v2`.
+- `ai/context/latest-status.md` has been updated to mark TASK-0009 as completed and TASK-0010-create-dotnet-project-skeleton as the next suggested task.
 
 ## Next Suggested Task
 

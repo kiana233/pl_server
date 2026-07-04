@@ -216,6 +216,33 @@ Recovery push result:
 
 `git push -u origin task/0009-local-intake-and-architecture-v2` succeeded and updated the remote branch from `7cb4a5d` to `3a22933`.
 
+## ChatGPT Review Fixup 2
+
+ChatGPT reviewed the remote task branch again and found that the previous fixup still left incomplete placeholder text in `docs/codex-auto-commit-policy.md`.
+
+Fixes made in this follow-up commit:
+
+* Fully rewrote `docs/codex-auto-commit-policy.md`.
+* Replaced the incomplete branch format with: `task/TASK_ID_LOWERCASE_TITLE`.
+* Added the concrete example: `task/0009-local-intake-and-architecture-v2`.
+* Replaced the incomplete push command with: `git push -u origin TASK_BRANCH_NAME`.
+* Added the concrete example: `git push -u origin task/0009-local-intake-and-architecture-v2`.
+* Updated `ai/context/current-state.md` so it no longer says `latest-status.md` points to TASK-0002.
+* Confirmed this fixup contains no server code, GUI code, PacketCodec, TCP host, gameplay logic, client resources, reference server source, binaries, or databases.
+
+## Fixup 2 Commands Run
+
+* `git checkout task/0009-local-intake-and-architecture-v2`: succeeded; branch was already checked out.
+* `git pull origin task/0009-local-intake-and-architecture-v2`: failed with `Failed to connect to github.com port 443 after 21091 ms: Timed out`.
+* `git status --short`: clean before editing.
+* `git diff --stat`: run after editing; result confirmed only the allowed three files changed.
+* `dotnet build .\src\PlServer.sln`: succeeded with a warning that no restoreable projects exist.
+* `dotnet test .\src\PlServer.sln`: exited successfully with a warning that no restoreable projects exist.
+
+## Fixup 2 Push Result
+
+Pending before commit. Final push result is recorded in terminal output after `git push -u origin task/0009-local-intake-and-architecture-v2`.
+
 ## ChatGPT Review Fixup
 
 ChatGPT reviewed the remote task branch and requested a documentation fixup before merging TASK-0009 into `main`.
