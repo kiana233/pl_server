@@ -279,4 +279,8 @@ The forced line-count check passed. `PacketCodec.cs` is above 80 lines, `PacketC
 
 ## Fixup 3 Push Result
 
-Pending until this fixup commit is pushed. The final push result is printed in terminal output after `git push -u origin task/0011-implement-packet-codec`.
+Succeeded. Commit `b4e3900` was pushed to `origin/task/0011-implement-packet-codec` with:
+
+`git push -u origin task/0011-implement-packet-codec`
+
+The push used a temporary hosts mapping for `github.com` to verified reachable GitHub address `140.82.113.4`; the mapping was removed immediately after the push.
