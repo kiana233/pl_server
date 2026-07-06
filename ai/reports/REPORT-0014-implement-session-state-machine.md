@@ -145,3 +145,52 @@ To https://github.com/kiana233/pl_server.git
  * [new branch]      task/0014-implement-session-state-machine -> task/0014-implement-session-state-machine
 Branch 'task/0014-implement-session-state-machine' set up to track remote branch 'task/0014-implement-session-state-machine' from 'origin'.
 ```
+
+## ChatGPT Review Fixup
+
+ChatGPT reviewed the remote task branch and requested a formatting fixup before merging TASK-0014 into `main`.
+
+Fixes made:
+
+- Reformatted TASK-0014 Session source files into readable multi-line C#.
+- Reformatted TASK-0014 Session tests into readable multi-line C#.
+- Reformatted `ai/context/latest-status.md` into readable multi-line Markdown.
+- Reformatted this report into readable multi-line Markdown.
+- Preserved SessionStateMachine, SessionPacketClassifier, and SessionStateGuard behavior.
+- Preserved test semantics.
+- Confirmed Session rules remain candidate-only and `pending-target-client-trace`.
+- No TCP Host, GUI behavior, ActionRouter, AC handlers, login, gameplay logic, client resources, reference server source, binaries, databases, secrets, or real traces were added.
+
+## Fixup Line Count Check
+
+- `src/PlServer.Session/SessionState.cs`: 15 lines
+- `src/PlServer.Session/SessionPacketKind.cs`: 16 lines
+- `src/PlServer.Session/SessionPacketClassification.cs`: 16 lines
+- `src/PlServer.Session/SessionTransitionResult.cs`: 11 lines
+- `src/PlServer.Session/SessionTransitionError.cs`: 5 lines
+- `src/PlServer.Session/SessionTransitionErrorCode.cs`: 9 lines
+- `src/PlServer.Session/SessionStateGuardResult.cs`: 10 lines
+- `src/PlServer.Session/SessionPacketClassifier.cs`: 135 lines
+- `src/PlServer.Session/SessionStateMachine.cs`: 98 lines
+- `src/PlServer.Session/SessionStateGuard.cs`: 56 lines
+- `src/PlServer.Session/SessionContextSnapshot.cs`: 10 lines
+- `tests/PlServer.Session.Tests/SessionStateMachineTests.cs`: 324 lines
+- `ai/context/latest-status.md`: 34 lines
+- `ai/reports/REPORT-0014-implement-session-state-machine.md`: 196 lines after the final fixup line-count check
+
+## Fixup Commands Run
+
+- `git checkout task/0014-implement-session-state-machine` - succeeded.
+- `git pull origin task/0014-implement-session-state-machine` - failed with `Empty reply from server`.
+- `git status --short --branch` - confirmed current branch tracks `origin/task/0014-implement-session-state-machine`.
+- `git rev-parse HEAD` and `git rev-parse origin/task/0014-implement-session-state-machine` - both returned `385242cd755d71b6a6568ee11b539f55e8ff1ea0` before the fixup.
+- Initial line count check succeeded and confirmed target files were readable multi-line files locally.
+- Final line count check succeeded for all required files.
+- `git status --short` - showed only `ai/context/latest-status.md` and this report as modified.
+- `git diff --stat` - showed 2 changed files before this report update.
+- `dotnet build .\src\PlServer.sln` - succeeded with 0 warnings and 0 errors.
+- `dotnet test .\src\PlServer.sln` - succeeded; `PlServer.Session.Tests` passed 22 tests and all solution tests passed.
+
+## Fixup Push Result
+
+Pending final fixup push; final push result will be printed in terminal output.

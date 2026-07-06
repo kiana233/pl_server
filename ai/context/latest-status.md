@@ -31,4 +31,4 @@ Prepare to implement protocol contract registry or an ActionRouter skeleton in T
 
 ## Next Suggested Task
 
-`TASK-0015-implement-protocol-contract-registry` or `TASK-0015-implement-action-router-skeleton`
+`TASK-0015-implement-protocol-contract-registry`
