@@ -110,8 +110,16 @@ The implementation is metadata-only. It does not implement TCP Host, GUI behavio
 
 ## Commit Hash
 
-Final commit hash printed in terminal output.
+Implementation commit: `426ea68`
+
+Final branch tip commit is printed in terminal output after recording this push result.
 
 ## Push Result
 
-Pending final push.
+Initial push succeeded:
+
+```text
+To https://github.com/kiana233/pl_server.git
+ * [new branch]      task/0015-implement-protocol-contract-registry -> task/0015-implement-protocol-contract-registry
+Branch 'task/0015-implement-protocol-contract-registry' set up to track remote branch 'task/0015-implement-protocol-contract-registry' from 'origin'.
+```
