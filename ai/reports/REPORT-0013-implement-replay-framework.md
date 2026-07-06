@@ -108,8 +108,12 @@ TASK-0014-implement-session-state-machine
 
 ## Commit Hash
 
-Final commit hash is printed in terminal output after commit.
+Implementation commit: `413eedb`
 
 ## Push Result
 
-Pending until push is attempted. Final push result is printed in terminal output because the report must be committed before the push can occur.
+Succeeded. Branch `task/0013-implement-replay-framework` was pushed to `origin` with:
+
+`git push -u origin task/0013-implement-replay-framework`
+
+GitHub returned a pull request creation URL for the pushed task branch.
