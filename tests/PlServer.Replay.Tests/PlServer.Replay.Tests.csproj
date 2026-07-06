@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PlServer.Replay\PlServer.Replay.csproj" />
+    <ProjectReference Include="..\..\src\PlServer.Protocol\PlServer.Protocol.csproj" />
+    <ProjectReference Include="..\..\src\PlServer.Diagnostics\PlServer.Diagnostics.csproj" />
   </ItemGroup>
 
 </Project>
