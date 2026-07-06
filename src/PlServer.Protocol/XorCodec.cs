@@ -1,19 +1,20 @@
-namespace PlServer.Protocol;
-
-public static class XorCodec
+﻿namespace PlServer.Protocol
 {
-    public static byte[] Transform(ReadOnlySpan<byte> bytes, byte key)
+    public static class XorCodec
     {
-        var transformed = bytes.ToArray();
-        TransformInPlace(transformed, key);
-        return transformed;
-    }
-
-    public static void TransformInPlace(Span<byte> bytes, byte key)
-    {
-        for (var i = 0; i < bytes.Length; i++)
+        public static byte[] Transform(ReadOnlySpan<byte> bytes, byte key)
         {
-            bytes[i] = (byte)(bytes[i] ^ key);
+            var transformed = bytes.ToArray();
+            TransformInPlace(transformed, key);
+            return transformed;
+        }
+
+        public static void TransformInPlace(Span<byte> bytes, byte key)
+        {
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                bytes[i] = (byte)(bytes[i] ^ key);
+            }
         }
     }
 }

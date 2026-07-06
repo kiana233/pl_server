@@ -1,13 +1,14 @@
-namespace PlServer.Protocol;
-
-public sealed record PacketHeader(
-    byte Byte0,
-    byte Byte1,
-    ushort PayloadLength)
+﻿namespace PlServer.Protocol
 {
-    public bool Matches(PacketCodecOptions options)
+    public sealed record PacketHeader(
+        byte Byte0,
+        byte Byte1,
+        ushort PayloadLength)
     {
-        ArgumentNullException.ThrowIfNull(options);
-        return Byte0 == options.HeaderByte0 && Byte1 == options.HeaderByte1;
+        public bool Matches(PacketCodecOptions options)
+        {
+            ArgumentNullException.ThrowIfNull(options);
+            return Byte0 == options.HeaderByte0 && Byte1 == options.HeaderByte1;
+        }
     }
 }

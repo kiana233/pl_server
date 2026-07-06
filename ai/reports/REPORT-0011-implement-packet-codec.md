@@ -177,3 +177,51 @@ Succeeded. Commit `09debad` was pushed to `origin/task/0011-implement-packet-cod
 `git push -u origin task/0011-implement-packet-codec`
 
 This report update records the successful push result; the final branch push is also verified in terminal output.
+
+## ChatGPT Review Fixup 2
+
+ChatGPT reviewed the remote task branch again and found that the previous fixup report incorrectly claimed the C# files were already readable multi-line files.
+
+Actual issue fixed in this commit:
+
+- Manually reformatted TASK-0011 C# source files into readable multi-line C#.
+- Manually reformatted TASK-0011 protocol test files into readable multi-line C#.
+- Verified file line counts after reformatting.
+- Preserved PacketCodec behavior and tests.
+- Confirmed PacketCodec behavior remains `reference:muayad` and `pending-target-client-trace`.
+- No AC handlers, login, TCP Host, GUI behavior, gameplay logic, client resources, reference server source, binaries, databases, secrets, or real traces were added.
+
+## Fixup 2 Line Count Check
+
+- `src/PlServer.Protocol/PacketCodecOptions.cs`: 59 lines.
+- `src/PlServer.Protocol/XorScope.cs`: 7 lines.
+- `src/PlServer.Protocol/PacketValidationErrorCode.cs`: 13 lines.
+- `src/PlServer.Protocol/PacketValidationError.cs`: 6 lines.
+- `src/PlServer.Protocol/PacketHeader.cs`: 14 lines.
+- `src/PlServer.Protocol/PacketFrame.cs`: 11 lines.
+- `src/PlServer.Protocol/PacketDecodeResult.cs`: 48 lines.
+- `src/PlServer.Protocol/PacketEncodeResult.cs`: 37 lines.
+- `src/PlServer.Protocol/XorCodec.cs`: 20 lines.
+- `src/PlServer.Protocol/PacketReader.cs`: 64 lines.
+- `src/PlServer.Protocol/PacketWriter.cs`: 36 lines.
+- `src/PlServer.Protocol/PacketCodec.cs`: 169 lines.
+- `tests/PlServer.Protocol.Tests/PacketCodecTests.cs`: 182 lines.
+- `tests/PlServer.Protocol.Tests/PacketReaderWriterTests.cs`: 28 lines.
+
+The forced line-count check passed. `PacketCodec.cs` is above 80 lines and `PacketCodecTests.cs` is above 120 lines.
+
+## Fixup 2 Commands Run
+
+- `git checkout task/0011-implement-packet-codec`: succeeded; branch was already checked out.
+- `git pull origin task/0011-implement-packet-codec`: did not complete because GitHub HTTPS did not return before the command was stopped; the working tree remained clean and intact.
+- `git status --short --branch`: succeeded; branch was clean and tracking `origin/task/0011-implement-packet-codec`.
+- Manual C# reformat: succeeded; converted TASK-0011 protocol source and test files from file-scoped namespace style to block-scoped namespace style with normal indentation.
+- Forced line-count check: succeeded for all listed TASK-0011 C# files.
+- `git status --short`: succeeded; only the TASK-0011 report and listed TASK-0011 C# files were modified.
+- `git diff --stat`: succeeded; showed actual diffs for the TASK-0011 protocol source files and protocol test files.
+- `dotnet build .\src\PlServer.sln`: succeeded with 0 warnings and 0 errors.
+- `dotnet test .\src\PlServer.sln`: succeeded. `PlServer.Protocol.Tests` passed 17 tests; the full solution test run passed.
+
+## Fixup 2 Push Result
+
+Pending until this fixup commit is pushed. The final push result is printed in terminal output after `git push -u origin task/0011-implement-packet-codec`.

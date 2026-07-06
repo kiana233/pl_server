@@ -1,6 +1,7 @@
-namespace PlServer.Protocol;
-
-public enum XorScope
+﻿namespace PlServer.Protocol
 {
-    WholeFrame = 0
+    public enum XorScope
+    {
+        WholeFrame = 0
+    }
 }

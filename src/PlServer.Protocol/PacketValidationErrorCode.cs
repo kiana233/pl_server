@@ -1,12 +1,13 @@
-namespace PlServer.Protocol;
-
-public enum PacketValidationErrorCode
+﻿namespace PlServer.Protocol
 {
-    NullOrEmptyInput,
-    FrameTooShort,
-    InvalidHeader,
-    DeclaredLengthLargerThanAvailable,
-    DeclaredLengthSmallerThanExpected,
-    PayloadLengthMismatch,
-    MissingAc
+    public enum PacketValidationErrorCode
+    {
+        NullOrEmptyInput,
+        FrameTooShort,
+        InvalidHeader,
+        DeclaredLengthLargerThanAvailable,
+        DeclaredLengthSmallerThanExpected,
+        PayloadLengthMismatch,
+        MissingAc
+    }
 }
