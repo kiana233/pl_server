@@ -4,7 +4,7 @@ Date: 2026-07-06
 
 ## Current Phase
 
-Phase 4 / Replay Framework
+Phase 5 / Session State Foundation
 
 ## Repository Paths
 
@@ -15,7 +15,7 @@ Phase 4 / Replay Framework
 ## Current GitHub Visible State
 
 - Remote: `origin https://github.com/kiana233/pl_server.git`
-- Task branch: `task/0013-implement-replay-framework`
+- Task branch: `task/0014-implement-session-state-machine`
 - Base branch: `main`
 
 ## Current Local Scan State
@@ -24,10 +24,11 @@ Phase 4 / Replay Framework
 - TASK-0011 implemented the basic Protocol-layer PacketCodec.
 - TASK-0012 implemented protocol trace logging infrastructure in `PlServer.Diagnostics`.
 - TASK-0013 implemented the replay framework in `PlServer.Replay`.
+- TASK-0014 implemented candidate-only SessionStateMachine / SessionPacketClassifier / SessionStateGuard foundations.
 - PacketCodec exists and remains the source for decoded packet frame data.
 - ProtocolTraceLogger exists and can emit JSON Lines trace events.
 - Replay currently verifies only frame validity and AC/SubAC expectations.
-- Replay does not validate session state.
+- SessionStateMachine validates candidate state flow but does not implement business behavior.
 - Replay data is synthetic or sanitized JSONL and is not target-client confirmation.
 
 ## Implemented Content
@@ -39,11 +40,12 @@ Phase 4 / Replay Framework
 - `PlServer.Replay` can parse uppercase spaced hex into bytes.
 - `PlServer.Replay` can run replay steps through `PacketCodec`.
 - `PlServer.Replay` reports decoded AC/SubAC, expected AC/SubAC matches, packet validation errors, and run summaries.
+- `PlServer.Session` contains candidate packet classification, minimal state transitions, state guard validation, and context snapshot structures.
+- Session state rules remain based on `reference:muayad` / assumption labels and `pending-target-client-trace` status.
 
 ## Not Implemented
 
 - TCP Host is not implemented.
-- SessionStateMachine is not implemented.
 - ActionRouter is not implemented.
 - AC handler dispatch is not implemented.
 - AC0, AC63, AC06, login, character selection, enter-map, movement, inventory, equipment, NPC, quests, warp, and battle are not implemented.
@@ -53,8 +55,9 @@ Phase 4 / Replay Framework
 ## Current Blockers
 
 - Real target-client packet traces are not yet available in this repository, so protocol behavior cannot be marked `confirmed`.
-- Replay framework is limited to frame and AC/SubAC verification until session state and action routing foundations are implemented.
+- Replay framework is limited to frame and AC/SubAC verification until action routing foundations are implemented.
+- Session classification and transition rules are not confirmed without target-client trace evidence.
 
 ## Next Suggested Task
 
-TASK-0014-implement-session-state-machine
+TASK-0015-implement-protocol-contract-registry or TASK-0015-implement-action-router-skeleton

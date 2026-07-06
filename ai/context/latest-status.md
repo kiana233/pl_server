@@ -4,19 +4,19 @@ Date: 2026-07-06
 
 ## Phase
 
-Phase 4 / Replay Framework completed.
+Phase 5 / Session State Foundation completed.
 
 ## Last Completed Task
 
-`ai/tasks/TASK-0013-implement-replay-framework.md`
+`ai/tasks/TASK-0014-implement-session-state-machine.md`
 
 ## Active Task
 
-None. Waiting for ChatGPT review and TASK-0014 creation.
+None. Waiting for ChatGPT review and TASK-0015 creation.
 
 ## Current Goal
 
-Prepare to implement the session state machine in TASK-0014.
+Prepare to implement protocol contract registry or an ActionRouter skeleton in TASK-0015.
 
 ## Current Constraints
 
@@ -26,8 +26,9 @@ Prepare to implement the session state machine in TASK-0014.
 - Protocol facts must keep source labels.
 - Replay records do not mark reference behavior as confirmed.
 - Synthetic replay must not be treated as real target-client trace.
+- Session rules are candidate-only and remain pending target-client trace confirmation.
 - Codex may commit and push task branches, but must not merge `main` without ChatGPT review approval.
 
 ## Next Suggested Task
 
-`TASK-0014-implement-session-state-machine`
+`TASK-0015-implement-protocol-contract-registry` or `TASK-0015-implement-action-router-skeleton`
