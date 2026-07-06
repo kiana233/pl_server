@@ -142,3 +142,34 @@ Fixes made:
 ## Fixup Push Result
 
 Pending until this fixup commit is pushed. The final push result is printed in terminal output after `git push -u origin task/0011-implement-packet-codec`.
+
+## ChatGPT Review Fixup
+
+ChatGPT reviewed the remote task branch and requested a fixup before merging TASK-0011 into `main`.
+
+Fixes made:
+
+- Updated `ai/context/latest-status.md` so TASK-0011 is the latest completed task and TASK-0012 is the next suggested task.
+- Verified TASK-0011 C# source and test files are normal readable multi-line C# files and are not effectively single-line files.
+- Preserved PacketCodec behavior and tests.
+- Confirmed PacketCodec behavior remains `reference:muayad` and `pending-target-client-trace`.
+- No AC handlers, login, TCP Host, GUI behavior, gameplay logic, client resources, reference server source, binaries, databases, secrets, or real traces were added.
+
+## Fixup Commands Run
+
+- `git checkout task/0011-implement-packet-codec`: succeeded; branch was already checked out.
+- `git pull origin task/0011-implement-packet-codec`: failed twice because GitHub HTTPS connection to port 443 timed out after about 21 seconds. The local working tree was clean and remained intact.
+- `git status --short --branch`: succeeded; branch was clean and tracking `origin/task/0011-implement-packet-codec`.
+- `Get-Content ai/context/latest-status.md`: succeeded.
+- `Get-Content ai/tasks/TASK-0011-implement-packet-codec.md`: succeeded.
+- `dotnet format .\src\PlServer.sln`: succeeded; it did not change the TASK-0011 protocol files, which were already multi-line.
+- `git restore --worktree -- src/PlServer.Gui/AssemblyInfo.cs`: succeeded; removed an out-of-scope formatting-only change produced by `dotnet format`.
+- TASK-0011 C# line count check: succeeded; every checked file had more than 3 lines.
+- `git status --short`: succeeded; only `ai/context/latest-status.md` and this report were modified.
+- `git diff --stat`: succeeded; only `ai/context/latest-status.md` and this report were modified.
+- `dotnet build .\src\PlServer.sln`: succeeded with 0 warnings and 0 errors.
+- `dotnet test .\src\PlServer.sln`: succeeded. `PlServer.Protocol.Tests` passed 17 tests; the full solution test run passed.
+
+## Fixup Push Result
+
+Pending until this follow-up fixup commit is pushed. The final push result is printed in terminal output after `git push -u origin task/0011-implement-packet-codec`.
