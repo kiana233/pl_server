@@ -224,4 +224,8 @@ The forced line-count check passed. `PacketCodec.cs` is above 80 lines and `Pack
 
 ## Fixup 2 Push Result
 
-Pending until this fixup commit is pushed. The final push result is printed in terminal output after `git push -u origin task/0011-implement-packet-codec`.
+Succeeded. Reformat commit `fabf073` was pushed to `origin/task/0011-implement-packet-codec` with:
+
+`git push -u origin task/0011-implement-packet-codec`
+
+The push initially failed through the default DNS result for `github.com`, which resolved to `20.205.243.166` where TCP 443 timed out or reset. A temporary hosts mapping to verified reachable GitHub address `140.82.113.4` was applied for the push and removed immediately afterward.
