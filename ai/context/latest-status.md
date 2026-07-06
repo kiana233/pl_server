@@ -1,30 +1,33 @@
 # Latest Status
 
-Date: 2026-07-02
+Date: 2026-07-06
 
 ## Phase
 
-Phase 0: AI-Codex workflow bootstrap completed.
+Phase 2 / Protocol Frame Codec completed.
 
 ## Last Completed Task
 
-`ai/tasks/TASK-0001-bootstrap.md`
+`ai/tasks/TASK-0011-implement-packet-codec.md`
 
 ## Active Task
 
-`ai/tasks/TASK-0002-reference-analysis.md`
+None. Waiting for ChatGPT review and TASK-0012 creation.
 
 ## Current Goal
 
-Run reference-server analysis without copying implementation code or client resources.
+Prepare to implement protocol trace logging in TASK-0012.
 
 ## Current Constraints
 
-- Do not implement server code yet.
-- Do not add client binaries or copyrighted client resources.
-- Do not add private account data, tokens, or raw packet captures.
-- Protocol facts must be labeled as reference facts, client-trace facts, or assumptions.
+- Do not implement gameplay before protocol framing, logging, replay, session, and resource foundations.
+- Do not implement AC handlers before ActionRouter and SessionStateGuard are ready.
+- Do not add client resources or copied reference-server source.
+- Protocol facts must keep source labels.
+- PacketCodec behavior is based on `reference:muayad` and remains `pending-target-client-trace`.
+- Reference behavior cannot be marked confirmed without target-client trace.
+- Codex may commit and push task branches, but must not merge `main` without ChatGPT review approval.
 
 ## Next Suggested Task
 
-`ai/tasks/TASK-0002-reference-analysis.md`
+`TASK-0012-implement-protocol-trace-logger`
