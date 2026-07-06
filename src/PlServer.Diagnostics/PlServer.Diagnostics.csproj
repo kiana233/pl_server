@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PlServer.Core\PlServer.Core.csproj" />
+    <ProjectReference Include="..\PlServer.Protocol\PlServer.Protocol.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
