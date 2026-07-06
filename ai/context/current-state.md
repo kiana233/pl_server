@@ -4,7 +4,7 @@ Date: 2026-07-06
 
 ## Current Phase
 
-Phase 2 / Protocol Frame Codec
+Phase 3 / Protocol Trace Logging
 
 ## Repository Paths
 
@@ -15,45 +15,42 @@ Phase 2 / Protocol Frame Codec
 ## Current GitHub Visible State
 
 - Remote: `origin https://github.com/kiana233/pl_server.git`
-- Task branch: `task/0011-implement-packet-codec`
+- Task branch: `task/0012-implement-protocol-trace-logger`
 - Base branch: `main`
 
 ## Current Local Scan State
 
 - TASK-0010 created a real .NET solution and project skeleton.
 - TASK-0011 implemented the basic Protocol-layer PacketCodec.
-- PacketCodec rules are based on local reference server observations from `D:\pl\server\NetWork\Packet.cs` and `D:\pl\server\NetWork\Server.cs`.
-- PacketCodec source label: `reference:muayad`.
-- PacketCodec status: `pending-target-client-trace`, not `confirmed`.
+- TASK-0012 implemented protocol trace logging infrastructure in `PlServer.Diagnostics`.
+- PacketCodec exists and remains the source for decoded packet frame data.
+- Protocol trace records do not mean target-client confirmation.
 
 ## Implemented Content
 
-- `PlServer.Protocol` contains configurable packet codec options.
-- `PlServer.Protocol` can encode and decode the basic old-client-compatible frame shape.
-- Header defaults to `F4 44`.
-- Length defaults to 2-byte little-endian payload length at offset 2.
-- Payload defaults to offset 4.
-- AC defaults to payload offset 0.
-- SubAC defaults to payload offset 1 when present.
-- XOR helper supports whole-frame XOR with key `0xAD`.
-- PacketReader and PacketWriter support basic little-endian binary operations.
-- Protocol tests cover encode/decode, malformed frames, XOR roundtrip, configurable header, and reader/writer little-endian behavior.
+- `PlServer.Protocol` contains configurable packet codec options, frame encode/decode, packet validation results, XOR helper, packet reader, and packet writer.
+- `PlServer.Diagnostics` contains structured protocol trace events.
+- `PlServer.Diagnostics` can format byte arrays as uppercase spaced hex.
+- `PlServer.Diagnostics` can format trace events as one-line JSON.
+- `PlServer.Diagnostics` contains a JSON Lines trace sink that creates directories, appends events, uses UTF-8, and supports flush/dispose.
+- `PlServer.Diagnostics` contains `ProtocolTraceLogger`, which can convert `PacketDecodeResult` into `ProtocolTraceEvent` while preserving validation errors.
+- `PlServer.Diagnostics` contains `PacketBehaviorRegistry` with candidate descriptors for AC0, AC63/4, AC63/2, and AC06/1.
+- Behavior descriptors are labeled as `reference:muayad` and `pending-target-client-trace`, not confirmed.
 
 ## Not Implemented
 
 - TCP Host is not implemented.
-- TCP frame splitter is not implemented.
-- Packet logger is not implemented.
-- Replay framework behavior is not implemented beyond the project skeleton.
+- Replay framework behavior and ReplayRunner are not implemented.
 - Session state machine is not implemented.
+- AC handler dispatch is not implemented.
 - AC0, AC63, AC06, login, character selection, enter-map, movement, inventory, equipment, NPC, quests, warp, and battle are not implemented.
-- GUI management functionality is not implemented beyond a minimal WPF shell title.
+- GUI management functionality is not implemented beyond the existing minimal WPF shell.
 
 ## Current Blockers
 
 - Real target-client packet traces are not yet available in this repository, so protocol behavior cannot be marked `confirmed`.
-- XOR scope is based on `reference:muayad` and remains pending target-client trace verification.
+- Behavior registry entries are candidate descriptions only and are not business implementation.
 
 ## Next Suggested Task
 
-TASK-0012-implement-protocol-trace-logger
+TASK-0013-implement-replay-framework

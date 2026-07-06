@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PlServer.Diagnostics\PlServer.Diagnostics.csproj" />
+    <ProjectReference Include="..\..\src\PlServer.Protocol\PlServer.Protocol.csproj" />
   </ItemGroup>
 
 </Project>
