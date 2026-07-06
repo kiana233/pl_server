@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\PlServer.Application\PlServer.Application.csproj" />
+    <ProjectReference Include="..\PlServer.LegacyProtocol\PlServer.LegacyProtocol.csproj" />
+    <ProjectReference Include="..\PlServer.Network\PlServer.Network.csproj" />
+    <ProjectReference Include="..\PlServer.Session\PlServer.Session.csproj" />
+    <ProjectReference Include="..\PlServer.Resources\PlServer.Resources.csproj" />
+    <ProjectReference Include="..\PlServer.Persistence\PlServer.Persistence.csproj" />
+    <ProjectReference Include="..\PlServer.Diagnostics\PlServer.Diagnostics.csproj" />
+    <ProjectReference Include="..\PlServer.Replay\PlServer.Replay.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
