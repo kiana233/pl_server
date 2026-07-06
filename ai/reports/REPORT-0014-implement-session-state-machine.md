@@ -132,8 +132,16 @@ The implementation adds candidate packet classification, session transition chec
 
 ## Commit Hash
 
-Final commit hash printed in terminal output.
+Implementation commit: `1423292`
+
+Final branch tip commit is printed in terminal output after recording this push result.
 
 ## Push Result
 
-Pending final push; final push result will be printed in terminal output.
+Initial push succeeded:
+
+```text
+To https://github.com/kiana233/pl_server.git
+ * [new branch]      task/0014-implement-session-state-machine -> task/0014-implement-session-state-machine
+Branch 'task/0014-implement-session-state-machine' set up to track remote branch 'task/0014-implement-session-state-machine' from 'origin'.
+```
