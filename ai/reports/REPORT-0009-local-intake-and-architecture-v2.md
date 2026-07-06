@@ -200,6 +200,34 @@ Push failed:
 
 No repeated push attempts were made after the network timeout.
 
+## ChatGPT Review Fixup 3
+
+ChatGPT reviewed the remote task branch again and found that the previous fixup still left incomplete placeholder text in `docs/codex-auto-commit-policy.md`.
+
+Fixes made in this commit:
+
+* Fully overwrote `docs/codex-auto-commit-policy.md` using explicit PowerShell content replacement.
+* Replaced the incomplete branch format with: `task/TASK_ID_LOWERCASE_TITLE`.
+* Added the concrete branch example: `task/0009-local-intake-and-architecture-v2`.
+* Replaced the incomplete push command with: `git push -u origin TASK_BRANCH_NAME`.
+* Added the concrete push example: `git push -u origin task/0009-local-intake-and-architecture-v2`.
+* Updated `ai/context/current-state.md` so it no longer says `latest-status.md` points to TASK-0002.
+* Confirmed this fixup contains no server code, GUI code, PacketCodec, TCP host, gameplay logic, client resources, reference server source, binaries, or databases.
+
+## Fixup 3 Commands Run
+
+* `git checkout task/0009-local-intake-and-architecture-v2`: succeeded; branch was already checked out.
+* `git pull origin task/0009-local-intake-and-architecture-v2`: succeeded; branch was already up to date.
+* `git status --short`: clean before editing.
+* `Get-Content docs/codex-auto-commit-policy.md`: confirmed the policy contains `task/TASK_ID_LOWERCASE_TITLE`, `git push -u origin TASK_BRANCH_NAME`, and `git push -u origin task/0009-local-intake-and-architecture-v2`.
+* `git diff --stat`: confirmed only `ai/reports/REPORT-0009-local-intake-and-architecture-v2.md` changed because `docs/codex-auto-commit-policy.md` and `ai/context/current-state.md` already matched the requested final content.
+* `dotnet build .\src\PlServer.sln`: succeeded with a warning that no restoreable projects exist.
+* `dotnet test .\src\PlServer.sln`: exited successfully with a warning that no restoreable projects exist.
+
+## Fixup 3 Push Result
+
+Pending before commit. Final push result is recorded in terminal output after `git push -u origin task/0009-local-intake-and-architecture-v2`.
+
 ## Push Recovery Analysis
 
 Codex rechecked the push failure after ChatGPT reported the remote branch was still missing the latest fixups.
