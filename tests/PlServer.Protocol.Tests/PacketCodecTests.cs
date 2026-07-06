@@ -2,6 +2,7 @@
 
 namespace PlServer.Protocol.Tests
 {
+
     public sealed class PacketCodecTests
     {
         [Fact]
@@ -16,7 +17,15 @@ namespace PlServer.Protocol.Tests
         [Fact]
         public void Encode_writes_little_endian_payload_length()
         {
-            var result = new PacketCodec().Encode(0x63, 0x01, new byte[] { 0xAA, 0xBB, 0xCC });
+            var result = new PacketCodec().Encode(
+                0x63,
+                0x01,
+                new byte[]
+                {
+                    0xAA,
+                    0xBB,
+                    0xCC
+                });
 
             Assert.Equal(0x05, result.EncodedBytes[2]);
             Assert.Equal(0x00, result.EncodedBytes[3]);
@@ -25,7 +34,16 @@ namespace PlServer.Protocol.Tests
         [Fact]
         public void Decode_reads_ac_and_subac()
         {
-            var frame = new byte[] { 0xF4, 0x44, 0x03, 0x00, 0x63, 0x01, 0xAA };
+            var frame = new byte[]
+            {
+                0xF4,
+                0x44,
+                0x03,
+                0x00,
+                0x63,
+                0x01,
+                0xAA
+            };
 
             var result = new PacketCodec().Decode(frame);
 
@@ -39,7 +57,14 @@ namespace PlServer.Protocol.Tests
         [Fact]
         public void Decode_allows_missing_subac_when_payload_length_is_one()
         {
-            var frame = new byte[] { 0xF4, 0x44, 0x01, 0x00, 0x06 };
+            var frame = new byte[]
+            {
+                0xF4,
+                0x44,
+                0x01,
+                0x00,
+                0x06
+            };
 
             var result = new PacketCodec().Decode(frame);
 
@@ -52,7 +77,14 @@ namespace PlServer.Protocol.Tests
         [Fact]
         public void Decode_rejects_invalid_header()
         {
-            var frame = new byte[] { 0x00, 0x44, 0x01, 0x00, 0x06 };
+            var frame = new byte[]
+            {
+                0x00,
+                0x44,
+                0x01,
+                0x00,
+                0x06
+            };
 
             var result = new PacketCodec().Decode(frame);
 
@@ -63,7 +95,12 @@ namespace PlServer.Protocol.Tests
         [Fact]
         public void Decode_rejects_frame_shorter_than_header_length()
         {
-            var frame = new byte[] { 0xF4, 0x44, 0x01 };
+            var frame = new byte[]
+            {
+                0xF4,
+                0x44,
+                0x01
+            };
 
             var result = new PacketCodec().Decode(frame);
 
@@ -74,7 +111,15 @@ namespace PlServer.Protocol.Tests
         [Fact]
         public void Decode_reports_declared_length_larger_than_available_bytes()
         {
-            var frame = new byte[] { 0xF4, 0x44, 0x04, 0x00, 0x63, 0x01 };
+            var frame = new byte[]
+            {
+                0xF4,
+                0x44,
+                0x04,
+                0x00,
+                0x63,
+                0x01
+            };
 
             var result = new PacketCodec().Decode(frame);
 
@@ -88,7 +133,14 @@ namespace PlServer.Protocol.Tests
         {
             var codec = new PacketCodec(new PacketCodecOptions { XorEnabled = true });
 
-            var encoded = codec.Encode(0x63, 0x01, new byte[] { 0xAA, 0xBB });
+            var encoded = codec.Encode(
+                0x63,
+                0x01,
+                new byte[]
+                {
+                    0xAA,
+                    0xBB
+                });
             var decoded = codec.Decode(encoded.EncodedBytes);
 
             Assert.True(decoded.IsValid);
@@ -103,7 +155,15 @@ namespace PlServer.Protocol.Tests
         [Fact]
         public void PacketReader_reads_little_endian_ushort_and_uint()
         {
-            var reader = new PacketReader(new byte[] { 0x34, 0x12, 0x78, 0x56, 0x34, 0x12 });
+            var reader = new PacketReader(new byte[]
+            {
+                0x34,
+                0x12,
+                0x78,
+                0x56,
+                0x34,
+                0x12
+            });
 
             Assert.Equal(0x1234, reader.ReadUInt16LittleEndian());
             Assert.Equal(0x12345678u, reader.ReadUInt32LittleEndian());
@@ -118,7 +178,17 @@ namespace PlServer.Protocol.Tests
             writer.WriteUInt16LittleEndian(0x1234);
             writer.WriteUInt32LittleEndian(0x12345678);
 
-            Assert.Equal(new byte[] { 0x34, 0x12, 0x78, 0x56, 0x34, 0x12 }, writer.ToArray());
+            Assert.Equal(
+                new byte[]
+                {
+                    0x34,
+                    0x12,
+                    0x78,
+                    0x56,
+                    0x34,
+                    0x12
+                },
+                writer.ToArray());
         }
 
         [Fact]
@@ -141,7 +211,14 @@ namespace PlServer.Protocol.Tests
         [Fact]
         public void Encoded_length_excludes_header_and_length_prefix()
         {
-            var result = new PacketCodec().Encode(0x20, 0x01, new byte[] { 0x10, 0x11 });
+            var result = new PacketCodec().Encode(
+                0x20,
+                0x01,
+                new byte[]
+                {
+                    0x10,
+                    0x11
+                });
 
             Assert.Equal(4, result.PayloadLength);
             Assert.Equal(result.EncodedBytes.Length - 4, result.PayloadLength);
@@ -154,9 +231,25 @@ namespace PlServer.Protocol.Tests
             var malformedFrames = new byte[][]
             {
                 Array.Empty<byte>(),
-                new byte[] { 0xF4 },
-                new byte[] { 0x00, 0x00, 0xFF, 0xFF },
-                new byte[] { 0xF4, 0x44, 0x02, 0x00, 0x63 }
+                new byte[]
+                {
+                    0xF4
+                },
+                new byte[]
+                {
+                    0x00,
+                    0x00,
+                    0xFF,
+                    0xFF
+                },
+                new byte[]
+                {
+                    0xF4,
+                    0x44,
+                    0x02,
+                    0x00,
+                    0x63
+                }
             };
 
             foreach (var malformedFrame in malformedFrames)
@@ -170,7 +263,13 @@ namespace PlServer.Protocol.Tests
         [Fact]
         public void Empty_payload_reports_missing_ac()
         {
-            var frame = new byte[] { 0xF4, 0x44, 0x00, 0x00 };
+            var frame = new byte[]
+            {
+                0xF4,
+                0x44,
+                0x00,
+                0x00
+            };
 
             var result = new PacketCodec().Decode(frame);
 
@@ -179,4 +278,5 @@ namespace PlServer.Protocol.Tests
             Assert.Contains(result.ValidationErrors, e => e.Code == PacketValidationErrorCode.DeclaredLengthSmallerThanExpected);
         }
     }
+
 }

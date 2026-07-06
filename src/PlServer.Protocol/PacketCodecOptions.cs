@@ -1,5 +1,6 @@
 ﻿namespace PlServer.Protocol
 {
+
     public sealed class PacketCodecOptions
     {
         public byte HeaderByte0 { get; init; } = 0xF4;
@@ -40,7 +41,10 @@
                 throw new NotSupportedException("Only little-endian length fields are supported.");
             }
 
-            if (LengthOffset < 0 || PayloadOffset < 0 || AcOffsetInPayload < 0 || SubAcOffsetInPayload < 0)
+            if (LengthOffset < 0
+                || PayloadOffset < 0
+                || AcOffsetInPayload < 0
+                || SubAcOffsetInPayload < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(PacketCodecOptions), "Offsets cannot be negative.");
             }
@@ -56,4 +60,5 @@
             }
         }
     }
+
 }

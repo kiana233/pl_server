@@ -1,5 +1,6 @@
 ﻿namespace PlServer.Protocol
 {
+
     public sealed record PacketHeader(
         byte Byte0,
         byte Byte1,
@@ -11,4 +12,5 @@
             return Byte0 == options.HeaderByte0 && Byte1 == options.HeaderByte1;
         }
     }
+
 }

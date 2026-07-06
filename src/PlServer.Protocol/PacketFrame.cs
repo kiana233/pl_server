@@ -1,5 +1,6 @@
 ﻿namespace PlServer.Protocol
 {
+
     public sealed record PacketFrame(
         byte[] RawBytes,
         byte[] DecodedBytes,
@@ -8,4 +9,5 @@
         byte[] Payload,
         byte? Ac,
         byte? SubAc);
+
 }

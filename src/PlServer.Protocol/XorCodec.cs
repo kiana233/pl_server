@@ -1,5 +1,6 @@
 ﻿namespace PlServer.Protocol
 {
+
     public static class XorCodec
     {
         public static byte[] Transform(ReadOnlySpan<byte> bytes, byte key)
@@ -17,4 +18,5 @@
             }
         }
     }
+
 }

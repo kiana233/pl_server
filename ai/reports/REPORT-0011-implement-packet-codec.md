@@ -229,3 +229,54 @@ Succeeded. Reformat commit `fabf073` was pushed to `origin/task/0011-implement-p
 `git push -u origin task/0011-implement-packet-codec`
 
 The push initially failed through the default DNS result for `github.com`, which resolved to `20.205.243.166` where TCP 443 timed out or reset. A temporary hosts mapping to verified reachable GitHub address `140.82.113.4` was applied for the push and removed immediately afterward.
+
+## ChatGPT Review Fixup 3
+
+ChatGPT reviewed the remote task branch again and confirmed that the previous fixup report did not match the remote source files.
+
+Actual issue fixed in this commit:
+
+- Rewrote TASK-0011 C# source files into readable multi-line C#.
+- Rewrote TASK-0011 protocol test files into readable multi-line C#.
+- Reformatted `ai/context/latest-status.md` into readable multi-line Markdown.
+- Verified line counts after reformatting.
+- Preserved PacketCodec behavior and tests.
+- Confirmed PacketCodec behavior remains `reference:muayad` and `pending-target-client-trace`.
+- No AC handlers, login, TCP Host, GUI behavior, gameplay logic, client resources, reference server source, binaries, databases, secrets, or real traces were added.
+
+## Fixup 3 Line Count Check
+
+- `src/PlServer.Protocol/PacketCodecOptions.cs`: 64 lines.
+- `src/PlServer.Protocol/XorScope.cs`: 9 lines.
+- `src/PlServer.Protocol/PacketValidationErrorCode.cs`: 15 lines.
+- `src/PlServer.Protocol/PacketValidationError.cs`: 8 lines.
+- `src/PlServer.Protocol/PacketHeader.cs`: 16 lines.
+- `src/PlServer.Protocol/PacketFrame.cs`: 13 lines.
+- `src/PlServer.Protocol/PacketDecodeResult.cs`: 50 lines.
+- `src/PlServer.Protocol/PacketEncodeResult.cs`: 39 lines.
+- `src/PlServer.Protocol/XorCodec.cs`: 22 lines.
+- `src/PlServer.Protocol/PacketReader.cs`: 66 lines.
+- `src/PlServer.Protocol/PacketWriter.cs`: 38 lines.
+- `src/PlServer.Protocol/PacketCodec.cs`: 171 lines.
+- `tests/PlServer.Protocol.Tests/PacketCodecTests.cs`: 282 lines.
+- `tests/PlServer.Protocol.Tests/PacketReaderWriterTests.cs`: 52 lines.
+- `ai/context/latest-status.md`: 33 lines.
+
+The forced line-count check passed. `PacketCodec.cs` is above 80 lines, `PacketCodecTests.cs` is above 120 lines, and `PacketCodecOptions.cs` is above 40 lines.
+
+## Fixup 3 Commands Run
+
+- `git checkout task/0011-implement-packet-codec`: succeeded; branch was already checked out.
+- `git pull origin task/0011-implement-packet-codec`: succeeded using a temporary hosts mapping for `github.com` because the default DNS result for GitHub HTTPS is unreliable in this environment.
+- `git status --short`: succeeded; initial working tree was clean.
+- Manual C# reformat: succeeded; all listed TASK-0011 C# source and test files were rewritten with explicit block spacing and expanded test data arrays.
+- Manual latest-status check: succeeded; `ai/context/latest-status.md` is readable multi-line Markdown and passed the line-count check.
+- Forced line-count check: succeeded for all listed TASK-0011 C# files and `ai/context/latest-status.md`.
+- `git status --short`: succeeded; only the TASK-0011 report and listed TASK-0011 C# files were modified.
+- `git diff --stat`: succeeded; showed actual diffs for all listed TASK-0011 C# source and test files.
+- `dotnet build .\src\PlServer.sln`: succeeded with 0 warnings and 0 errors.
+- `dotnet test .\src\PlServer.sln`: succeeded. `PlServer.Protocol.Tests` passed 17 tests; the full solution test run passed.
+
+## Fixup 3 Push Result
+
+Pending until this fixup commit is pushed. The final push result is printed in terminal output after `git push -u origin task/0011-implement-packet-codec`.

@@ -1,5 +1,6 @@
 ﻿namespace PlServer.Protocol
 {
+
     public sealed class PacketCodec
     {
         private readonly PacketCodecOptions _options;
@@ -166,4 +167,5 @@
             return new PacketDecodeResult(rawBytes, decodedBytes, header, payloadLength, payload, ac, subAc, errors);
         }
     }
+
 }

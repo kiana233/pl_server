@@ -1,5 +1,6 @@
 ﻿namespace PlServer.Protocol
 {
+
     public sealed class PacketDecodeResult
     {
         public PacketDecodeResult(
@@ -45,4 +46,5 @@
             return new PacketFrame(RawBytes, DecodedBytes, Header, PayloadLength, Payload, Ac, SubAc);
         }
     }
+
 }

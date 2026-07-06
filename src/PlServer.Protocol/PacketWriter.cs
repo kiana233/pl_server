@@ -1,5 +1,6 @@
 ﻿namespace PlServer.Protocol
 {
+
     public sealed class PacketWriter
     {
         private readonly List<byte> _bytes = new();
@@ -33,4 +34,5 @@
             return _bytes.ToArray();
         }
     }
+
 }

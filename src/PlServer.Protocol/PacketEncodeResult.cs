@@ -1,5 +1,6 @@
 ﻿namespace PlServer.Protocol
 {
+
     public sealed class PacketEncodeResult
     {
         public PacketEncodeResult(
@@ -34,4 +35,5 @@
 
         public byte? SubAc { get; }
     }
+
 }

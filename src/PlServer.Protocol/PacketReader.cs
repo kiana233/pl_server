@@ -1,5 +1,6 @@
 ﻿namespace PlServer.Protocol
 {
+
     public sealed class PacketReader
     {
         private readonly ReadOnlyMemory<byte> _bytes;
@@ -61,4 +62,5 @@
             }
         }
     }
+
 }
