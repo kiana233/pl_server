@@ -1,8 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\PlServer.Application\PlServer.Application.csproj" />
     <ProjectReference Include="..\PlServer.Protocol\PlServer.Protocol.csproj" />
     <ProjectReference Include="..\PlServer.Diagnostics\PlServer.Diagnostics.csproj" />
+    <ProjectReference Include="..\PlServer.LegacyProtocol\PlServer.LegacyProtocol.csproj" />
+    <ProjectReference Include="..\PlServer.Session\PlServer.Session.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

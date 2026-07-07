@@ -4,7 +4,7 @@ Date: 2026-07-07
 
 ## Current Phase
 
-Phase 7 / ActionRouter Skeleton
+Phase 8 / TCP Host Skeleton
 
 ## Repository Paths
 
@@ -15,7 +15,7 @@ Phase 7 / ActionRouter Skeleton
 ## Current GitHub Visible State
 
 - Remote: `origin https://github.com/kiana233/pl_server.git`
-- Task branch: `task/0016-implement-action-router-skeleton`
+- Task branch: `task/0017-implement-tcp-host-skeleton`
 - Base branch: `main`
 
 ## Current Local Scan State
@@ -24,38 +24,46 @@ Phase 7 / ActionRouter Skeleton
 - TASK-0011 implemented the basic Protocol-layer PacketCodec.
 - TASK-0012 implemented protocol trace logging infrastructure in `PlServer.Diagnostics`.
 - TASK-0013 implemented the replay framework in `PlServer.Replay`.
-- TASK-0014 created the SessionStateMachine / SessionPacketClassifier / SessionStateGuard foundation on its task branch.
+- TASK-0014 created the SessionStateMachine / SessionPacketClassifier / SessionStateGuard foundation.
 - TASK-0015 implemented the LegacyProtocol ProtocolContractRegistry.
-- TASK-0016 implements the ActionRouter skeleton.
-- PacketCodec, ProtocolTraceLogger, Replay, SessionStateMachine, SessionStateGuard, and ProtocolContractRegistry now exist for routing-foundation tests.
+- TASK-0016 implemented the ActionRouter skeleton.
+- TASK-0017 implements the TCP Host skeleton.
 
 ## Implemented Content
 
-- `PlServer.Protocol` contains configurable packet codec options, frame encode/decode, packet validation results, XOR helper, packet reader, and packet writer.
-- `PlServer.Diagnostics` contains structured protocol trace events, JSON Lines formatting, JSON Lines sink, protocol trace logger, and candidate-only behavior descriptors.
-- `PlServer.Replay` can import TASK-0012 JSON Lines trace records into replay steps and run replay steps through `PacketCodec`.
-- `PlServer.Session` contains session states, packet classification, a session state machine, and a SessionStateGuard for candidate packet gating.
-- `PlServer.LegacyProtocol` contains protocol source labels, evidence statuses, packet directions, protocol keys, contract metadata, field descriptors, session requirement metadata, a contract registry, lookup results, and a seeded catalog.
-- `PlServer.Application` contains an ActionRouter skeleton that connects decoded packets, protocol contracts, SessionStateGuard checks, and handler registry lookup.
-- ActionRouter only returns `InvalidPacket`, `UnknownPacket`, `RejectedBySessionGuard`, `MissingHandler`, or no-op routed results.
-- NoOpActionHandler returns skeleton-only no-op results and does not execute gameplay or login behavior.
-- Handler registry rejects duplicate registrations and returns missing-handler results without throwing during route lookup.
+- `PlServer.Protocol` contains PacketCodec, packet encode/decode, validation errors, XOR helper, packet reader, and packet writer.
+- `PlServer.Diagnostics` contains ProtocolTraceLogger and JSON Lines trace sink support.
+- `PlServer.Replay` can replay trace-derived packet steps through PacketCodec.
+- `PlServer.Session` contains session classification, state machine, and SessionStateGuard.
+- `PlServer.LegacyProtocol` contains protocol contract metadata and seeded candidate contracts.
+- `PlServer.Application` contains ActionRouter skeleton and no-op or missing-handler route results.
+- `PlServer.Network` now contains TcpServerHost, connection registry, connection contexts, receive pipeline, packet route pipeline, send pipeline skeleton, and runtime result types.
+- `PlServer.Host` provides a minimal console entry point that prints `梦幻服务端 Host 骨架` and starts listening only when `--listen` is passed.
+
+## TCP Host Scope
+
+- TCP Host can listen on a local address, including loopback port `0` for tests.
+- TCP Host accepts local clients and tracks connection lifecycle through a registry.
+- Stop closes active connections and clears the registry.
+- ReceivePipeline treats the input byte array as one complete frame for this task.
+- PacketRoutePipeline connects `PacketCodec -> ProtocolTraceLogger -> ActionRouter`.
+- SendPipeline queues outgoing bytes only and does not generate gameplay responses.
 
 ## Not Implemented
 
-- TCP Host is not implemented.
+- Full TCP sticky-packet and half-packet frame splitting is not implemented.
 - Real AC handler dispatch is not implemented.
 - AC0, AC63, AC06, login, character selection, enter-map, movement, inventory, equipment, NPC, quests, warp, and battle are not implemented.
 - GUI management functionality is not implemented beyond the existing minimal WPF shell.
-- Protocol contracts do not execute business behavior.
-- ActionRouter does not run login, map, inventory, NPC, battle, or gameplay logic.
-- Replay does not execute real client capture and does not confirm target-client behavior.
+- TCP Host does not connect to real client resources and does not record real client traces.
+- Protocol behavior remains pending target-client trace confirmation.
 
 ## Current Blockers
 
-- Real target-client packet traces are not yet available in this repository, so protocol behavior cannot be marked `confirmed`.
-- ActionRouter is a skeleton only; real handler implementation requires explicit future tasks and review.
+- Real target-client packet traces are not yet available in this repository.
+- Complete stream frame splitting is required before real TCP client compatibility testing.
+- Real handlers require explicit future tasks and review approval.
 
 ## Next Suggested Task
 
-TASK-0017-implement-tcp-host-skeleton
+TASK-0018-implement-frame-splitter-and-connection-pipeline
