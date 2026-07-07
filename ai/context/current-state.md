@@ -1,10 +1,10 @@
 # Current State
 
-Date: 2026-07-06
+Date: 2026-07-07
 
 ## Current Phase
 
-Phase 6 / Protocol Contract Registry
+Phase 7 / ActionRouter Skeleton
 
 ## Repository Paths
 
@@ -15,7 +15,7 @@ Phase 6 / Protocol Contract Registry
 ## Current GitHub Visible State
 
 - Remote: `origin https://github.com/kiana233/pl_server.git`
-- Task branch: `task/0015-implement-protocol-contract-registry`
+- Task branch: `task/0016-implement-action-router-skeleton`
 - Base branch: `main`
 
 ## Current Local Scan State
@@ -25,36 +25,37 @@ Phase 6 / Protocol Contract Registry
 - TASK-0012 implemented protocol trace logging infrastructure in `PlServer.Diagnostics`.
 - TASK-0013 implemented the replay framework in `PlServer.Replay`.
 - TASK-0014 created the SessionStateMachine / SessionPacketClassifier / SessionStateGuard foundation on its task branch.
-- TASK-0015 implements the LegacyProtocol ProtocolContractRegistry.
-- PacketCodec exists and remains the source for decoded packet frame data.
-- ProtocolTraceLogger exists and can emit JSON Lines trace events.
-- Replay currently verifies frame validity and AC/SubAC expectations.
-- Protocol contracts are metadata only and do not execute handlers.
+- TASK-0015 implemented the LegacyProtocol ProtocolContractRegistry.
+- TASK-0016 implements the ActionRouter skeleton.
+- PacketCodec, ProtocolTraceLogger, Replay, SessionStateMachine, SessionStateGuard, and ProtocolContractRegistry now exist for routing-foundation tests.
 
 ## Implemented Content
 
 - `PlServer.Protocol` contains configurable packet codec options, frame encode/decode, packet validation results, XOR helper, packet reader, and packet writer.
 - `PlServer.Diagnostics` contains structured protocol trace events, JSON Lines formatting, JSON Lines sink, protocol trace logger, and candidate-only behavior descriptors.
 - `PlServer.Replay` can import TASK-0012 JSON Lines trace records into replay steps and run replay steps through `PacketCodec`.
+- `PlServer.Session` contains session states, packet classification, a session state machine, and a SessionStateGuard for candidate packet gating.
 - `PlServer.LegacyProtocol` contains protocol source labels, evidence statuses, packet directions, protocol keys, contract metadata, field descriptors, session requirement metadata, a contract registry, lookup results, and a seeded catalog.
-- Legacy protocol contracts describe AC/SubAC candidates only; they do not implement AC handlers.
-- Protocol contracts remain based on `reference:muayad`, `assumption`, or `unknown` evidence and are `pending-target-client-trace` unless explicitly unknown.
+- `PlServer.Application` contains an ActionRouter skeleton that connects decoded packets, protocol contracts, SessionStateGuard checks, and handler registry lookup.
+- ActionRouter only returns `InvalidPacket`, `UnknownPacket`, `RejectedBySessionGuard`, `MissingHandler`, or no-op routed results.
+- NoOpActionHandler returns skeleton-only no-op results and does not execute gameplay or login behavior.
+- Handler registry rejects duplicate registrations and returns missing-handler results without throwing during route lookup.
 
 ## Not Implemented
 
 - TCP Host is not implemented.
-- ActionRouter is not implemented.
-- AC handler dispatch is not implemented.
+- Real AC handler dispatch is not implemented.
 - AC0, AC63, AC06, login, character selection, enter-map, movement, inventory, equipment, NPC, quests, warp, and battle are not implemented.
 - GUI management functionality is not implemented beyond the existing minimal WPF shell.
 - Protocol contracts do not execute business behavior.
+- ActionRouter does not run login, map, inventory, NPC, battle, or gameplay logic.
 - Replay does not execute real client capture and does not confirm target-client behavior.
 
 ## Current Blockers
 
 - Real target-client packet traces are not yet available in this repository, so protocol behavior cannot be marked `confirmed`.
-- Contract metadata cannot become handler behavior until ActionRouter and AC handler tasks are explicitly created and reviewed.
+- ActionRouter is a skeleton only; real handler implementation requires explicit future tasks and review.
 
 ## Next Suggested Task
 
-TASK-0016-implement-action-router-skeleton
+TASK-0017-implement-tcp-host-skeleton
