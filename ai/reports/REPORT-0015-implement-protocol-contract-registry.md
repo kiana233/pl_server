@@ -178,3 +178,54 @@ Recorded line-count verification after formatting fixup:
 ## Fixup Push Result
 
 Pending final push for this Add-Content report-only fixup; final push result will be printed in terminal output.
+
+## ChatGPT Review Fixup
+
+ChatGPT reviewed the remote task branch and confirmed that the previous single-line formatting issue has been resolved for TASK-0015 source, test, and status files.
+
+Fixes verified:
+
+- TASK-0015 LegacyProtocol source files are readable multi-line C#.
+- TASK-0015 LegacyProtocol tests are readable multi-line C#.
+- `ai/context/latest-status.md` is readable Markdown.
+- `ai/context/current-state.md` is readable Markdown.
+- LegacyProtocolContractRegistry and seeded contract behavior were preserved.
+- Protocol contracts remain metadata-only and `pending-target-client-trace`.
+- No TCP Host, GUI behavior, ActionRouter, AC handlers, login, gameplay logic, client resources, reference server source, binaries, databases, secrets, or real traces were added.
+
+## Fixup Line Count Check
+
+- `src/PlServer.LegacyProtocol/ProtocolSourceLabel.cs`: 26 lines
+- `src/PlServer.LegacyProtocol/ProtocolEvidenceStatus.cs`: 10 lines
+- `src/PlServer.LegacyProtocol/LegacyPacketDirection.cs`: 8 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolSessionRequirement.cs`: 15 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolKey.cs`: 11 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolFieldDescriptor.cs`: 48 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolContract.cs`: 73 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolContractMatchKind.cs`: 8 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolContractLookupResult.cs`: 6 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolContractRegistry.cs`: 81 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolContractCatalog.cs`: 125 lines
+- `tests/PlServer.LegacyProtocol.Tests/LegacyProtocolContractRegistryTests.cs`: 233 lines
+- `ai/context/latest-status.md`: 33 lines
+- `ai/context/current-state.md`: 60 lines
+- `ai/reports/REPORT-0015-implement-protocol-contract-registry.md`: 180 lines
+
+## Fixup Commands Run
+
+- `git checkout task/0015-implement-protocol-contract-registry`
+- `git pull origin task/0015-implement-protocol-contract-registry`
+- `git status --short`
+- line-count generation script
+- `dotnet build .\src\PlServer.sln`
+- `dotnet test .\src\PlServer.sln`
+- `git diff --stat`
+
+## Fixup Test Results
+
+- `dotnet build .\src\PlServer.sln` succeeded.
+- `dotnet test .\src\PlServer.sln` succeeded.
+
+## Fixup Push Result
+
+Push result must be recorded after `git push` completes.
