@@ -239,3 +239,54 @@ To https://github.com/kiana233/pl_server.git
    a3f983d..b0142f5  task/0015-implement-protocol-contract-registry -> task/0015-implement-protocol-contract-registry
 Branch 'task/0015-implement-protocol-contract-registry' set up to track remote branch 'task/0015-implement-protocol-contract-registry' from 'origin'.
 ```
+
+## ChatGPT Review Fixup
+
+ChatGPT reviewed the remote task branch and confirmed that TASK-0015 source, test, and status files are now readable multi-line files, but the report was missing the required review fixup record.
+
+Fixes verified:
+
+- TASK-0015 LegacyProtocol source files are readable multi-line C#.
+- TASK-0015 LegacyProtocol tests are readable multi-line C#.
+- `ai/context/latest-status.md` is readable Markdown.
+- `ai/context/current-state.md` is readable Markdown.
+- LegacyProtocolContractRegistry and seeded contract behavior were preserved.
+- Protocol contracts remain metadata-only and `pending-target-client-trace`.
+- No TCP Host, GUI behavior, ActionRouter, AC handlers, login, gameplay logic, client resources, reference server source, binaries, databases, secrets, or real traces were added.
+
+## Fixup Line Count Check
+
+- `src/PlServer.LegacyProtocol/ProtocolSourceLabel.cs`: 26 lines
+- `src/PlServer.LegacyProtocol/ProtocolEvidenceStatus.cs`: 10 lines
+- `src/PlServer.LegacyProtocol/LegacyPacketDirection.cs`: 8 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolSessionRequirement.cs`: 15 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolKey.cs`: 11 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolFieldDescriptor.cs`: 48 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolContract.cs`: 73 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolContractMatchKind.cs`: 8 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolContractLookupResult.cs`: 6 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolContractRegistry.cs`: 81 lines
+- `src/PlServer.LegacyProtocol/LegacyProtocolContractCatalog.cs`: 125 lines
+- `tests/PlServer.LegacyProtocol.Tests/LegacyProtocolContractRegistryTests.cs`: 233 lines
+- `ai/context/latest-status.md`: 33 lines
+- `ai/context/current-state.md`: 60 lines
+- `ai/reports/REPORT-0015-implement-protocol-contract-registry.md`: 241 lines
+
+## Fixup Commands Run
+
+- `git checkout task/0015-implement-protocol-contract-registry`
+- `git pull origin task/0015-implement-protocol-contract-registry`
+- `git status --short`
+- line-count generation script
+- `git diff --stat`
+- `dotnet build .\src\PlServer.sln`
+- `dotnet test .\src\PlServer.sln`
+
+## Fixup Test Results
+
+- `dotnet build .\src\PlServer.sln` succeeded.
+- `dotnet test .\src\PlServer.sln` succeeded.
+
+## Fixup Push Result
+
+Push succeeded to `origin task/0015-implement-protocol-contract-registry`.
