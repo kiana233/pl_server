@@ -18,7 +18,7 @@ public sealed class ProtocolTraceLogger
         _sink.Write(traceEvent);
     }
 
-    public void LogPacketDecodeResult(
+    public ProtocolTraceEvent CreatePacketDecodeEvent(
         ProtocolTraceDirection direction,
         string connectionId,
         PacketDecodeResult decodeResult,
@@ -26,13 +26,15 @@ public sealed class ProtocolTraceLogger
         string? characterName = null,
         string? sessionState = null,
         string result = "decoded",
+        string? routeStatus = null,
+        string? handler = null,
         ProtocolTraceResourceCheck[]? resourceChecks = null,
         ProtocolTraceStateChange? stateChange = null)
     {
         ArgumentNullException.ThrowIfNull(decodeResult);
 
         var behavior = _behaviorRegistry.Resolve(decodeResult.Ac, decodeResult.SubAc);
-        var traceEvent = new ProtocolTraceEvent
+        return new ProtocolTraceEvent
         {
             Direction = direction,
             ConnectionId = connectionId,
@@ -47,7 +49,8 @@ public sealed class ProtocolTraceLogger
             SubAc = decodeResult.SubAc,
             ProtocolName = behavior.ProtocolName,
             Behavior = behavior.Behavior,
-            Handler = behavior.Handler,
+            Handler = handler ?? behavior.Handler,
+            RouteStatus = routeStatus,
             Result = decodeResult.IsValid ? result : "invalid",
             SourceLabel = behavior.SourceLabel,
             Status = decodeResult.IsValid ? behavior.Status : ProtocolTraceStatus.Invalid,
@@ -55,6 +58,33 @@ public sealed class ProtocolTraceLogger
             ResourceChecks = resourceChecks ?? Array.Empty<ProtocolTraceResourceCheck>(),
             StateChange = stateChange
         };
+    }
+
+    public void LogPacketDecodeResult(
+        ProtocolTraceDirection direction,
+        string connectionId,
+        PacketDecodeResult decodeResult,
+        string? accountName = null,
+        string? characterName = null,
+        string? sessionState = null,
+        string result = "decoded",
+        string? routeStatus = null,
+        string? handler = null,
+        ProtocolTraceResourceCheck[]? resourceChecks = null,
+        ProtocolTraceStateChange? stateChange = null)
+    {
+        var traceEvent = CreatePacketDecodeEvent(
+            direction,
+            connectionId,
+            decodeResult,
+            accountName,
+            characterName,
+            sessionState,
+            result,
+            routeStatus,
+            handler,
+            resourceChecks,
+            stateChange);
 
         Log(traceEvent);
     }

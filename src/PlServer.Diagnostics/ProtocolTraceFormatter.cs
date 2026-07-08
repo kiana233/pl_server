@@ -41,6 +41,7 @@ public static class ProtocolTraceFormatter
             ["protocolName"] = traceEvent.ProtocolName,
             ["behavior"] = traceEvent.Behavior,
             ["handler"] = traceEvent.Handler,
+            ["routeStatus"] = traceEvent.RouteStatus,
             ["result"] = traceEvent.Result,
             ["sourceLabel"] = FormatSourceLabel(traceEvent.SourceLabel),
             ["status"] = FormatStatus(traceEvent.Status),
@@ -121,9 +122,22 @@ public static class ProtocolTraceFormatter
 
         return new Dictionary<string, object?>
         {
-            ["fromState"] = stateChange.FromState,
-            ["toState"] = stateChange.ToState,
-            ["reason"] = stateChange.Reason
+            ["previousState"] = stateChange.PreviousState,
+            ["currentState"] = stateChange.CurrentState,
+            ["packetKind"] = stateChange.PacketKind,
+            ["wasStateChanged"] = stateChange.WasStateChanged,
+            ["rejectionReason"] = stateChange.RejectionReason,
+            ["errors"] = stateChange.Errors.Select(FormatStateChangeError).ToArray(),
+            ["notes"] = stateChange.Notes.ToArray()
+        };
+    }
+
+    private static object FormatStateChangeError(ProtocolTraceStateChangeError error)
+    {
+        return new Dictionary<string, object?>
+        {
+            ["code"] = error.Code,
+            ["message"] = error.Message
         };
     }
 }
