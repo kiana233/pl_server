@@ -4,7 +4,7 @@ Date: 2026-07-08
 
 ## Current Phase
 
-Phase 10 / Connection Session Update Pipeline
+Phase 11 / Host Smoke Test and Synthetic Client
 
 ## Repository Paths
 
@@ -15,7 +15,7 @@ Phase 10 / Connection Session Update Pipeline
 ## Current GitHub Visible State
 
 - Remote: `origin https://github.com/kiana233/pl_server.git`
-- Task branch: `task/0019-implement-connection-session-update-pipeline`
+- Task branch: `task/0020-implement-host-smoke-test-and-synthetic-client`
 - Base branch: `main`
 
 ## Current Local Scan State
@@ -29,7 +29,8 @@ Phase 10 / Connection Session Update Pipeline
 - TASK-0016 implemented the ActionRouter skeleton.
 - TASK-0017 implemented the TCP Host skeleton.
 - TASK-0018 implemented frame splitting and connection receive pipeline hardening.
-- TASK-0019 implements connection-level SessionState update pipeline.
+- TASK-0019 implemented connection-level SessionState update pipeline.
+- TASK-0020 implements Host-level smoke tests and a synthetic TCP client test utility.
 
 ## Implemented Content
 
@@ -40,23 +41,25 @@ Phase 10 / Connection Session Update Pipeline
 - `PlServer.LegacyProtocol` contains protocol contract metadata and seeded candidate contracts.
 - `PlServer.Application` contains ActionRouter skeleton and no-op or missing-handler route results.
 - `PlServer.Network` contains TCP host skeleton, frame splitter, connection receive loop, receive pipeline, packet route pipeline, and connection session updater.
+- `tests/PlServer.Network.Tests` contains synthetic TCP client host smoke coverage.
 
-## Connection Session Update Scope
+## Host Smoke Test Scope
 
-- Each complete received packet is classified and evaluated through SessionStateMachine.
-- Allowed candidate transitions update `ClientConnectionContext.CurrentSessionState`.
-- Rejected, invalid, and unknown packets keep the previous connection state and remain inspectable.
-- Sticky frames update connection session state sequentially across frames.
-- Partial frames do not update session state until a complete frame is available.
-- ConnectionReceiveResult exposes FinalSessionState.
-- Each ReceivedPacketResult includes DecodeResult, RouteResult, and SessionUpdateResult.
+- Synthetic TCP client tests connect to `TcpServerHost` on loopback port 0.
+- Host smoke tests exercise `TcpServerHost -> ConnectionReceiveLoop -> PacketFrameReadBuffer -> ReceivePipeline -> PacketCodec -> ProtocolTraceLogger -> ActionRouter skeleton -> ConnectionSessionUpdater`.
+- AC0 handshake candidate synthetic packets advance `Connected` to `HandshakeDone`.
+- AC63/SubAC4 login request candidate synthetic packets advance `HandshakeDone` to `LoginPending`.
+- Sticky frames and partial frame chunks are covered through the real host socket path.
+- Malformed bytes are covered without crashing the host.
+- Protocol trace events are written to an in-memory sink for tests.
+- Synthetic client traffic is explicitly not target-client trace and does not confirm protocol facts.
 
 ## Not Implemented
 
 - Real AC handler dispatch is not implemented.
-- AC0, AC63, AC06, login, character selection, enter-map response, movement broadcast, inventory, equipment, NPC, quests, warp, and battle are not implemented.
+- AC0, AC63, AC06, login response, character selection, enter-map response, movement broadcast, inventory, equipment, NPC, quests, warp, and battle are not implemented.
 - GUI management functionality is not implemented beyond the existing minimal WPF shell.
-- TCP receive and session update tests use synthetic traffic only and do not confirm target-client behavior.
+- TCP receive, session update, and host smoke tests use synthetic traffic only and do not confirm target-client behavior.
 - SendPipeline does not generate login, enter-map, movement, or gameplay responses.
 - ProtocolTraceLogger state-change enrichment is not yet updated; session update results carry the state transition details.
 
@@ -68,4 +71,4 @@ Phase 10 / Connection Session Update Pipeline
 
 ## Next Suggested Task
 
-TASK-0020-implement-host-smoke-test-and-synthetic-client
+TASK-0021-implement-protocol-trace-state-change-enrichment
