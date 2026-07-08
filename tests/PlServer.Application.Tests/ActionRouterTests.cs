@@ -66,6 +66,51 @@ public sealed class ActionRouterTests
     }
 
     [Fact]
+    public async Task ActionRouter_invokes_handshake_candidate_handler_for_ac0()
+    {
+        var router = CreateCandidateRouter();
+        var request = CreateRequest(ValidPacket(0x00, 0x01), SessionState.Connected);
+
+        var result = await router.RouteAsync(request);
+
+        Assert.True(result.IsRouted);
+        Assert.Equal(ActionRouteStatus.CandidateHandled, result.Status);
+        Assert.Equal(nameof(HandshakeCandidateHandler), result.HandlerName);
+        Assert.Equal(ActionHandlerStatus.CandidateHandled, result.HandlerStatus);
+        Assert.NotNull(result.HandlerResult);
+    }
+
+    [Fact]
+    public async Task ActionRouter_invokes_login_request_candidate_handler_for_ac63_subac4()
+    {
+        var router = CreateCandidateRouter();
+        var request = CreateRequest(ValidPacket(0x63, 0x04), SessionState.HandshakeDone);
+
+        var result = await router.RouteAsync(request);
+
+        Assert.True(result.IsRouted);
+        Assert.Equal(ActionRouteStatus.CandidateHandled, result.Status);
+        Assert.Equal(nameof(LoginRequestCandidateHandler), result.HandlerName);
+        Assert.Equal(ActionHandlerStatus.CandidateHandled, result.HandlerStatus);
+        Assert.Contains(result.HandlerNotes, note => note.Contains("pending target-client trace", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task Router_does_not_resolve_or_invoke_handler_when_session_guard_rejects_packet()
+    {
+        var registry = new TrackingActionHandlerRegistry();
+        var router = new ActionRouter(LegacyProtocolContractCatalog.CreateDefaultRegistry(), registry);
+        var request = CreateRequest(ValidPacket(0x06, 0x01), SessionState.Connected);
+
+        var result = await router.RouteAsync(request);
+
+        Assert.Equal(ActionRouteStatus.RejectedBySessionGuard, result.Status);
+        Assert.Equal(0, registry.ResolveCount);
+        Assert.Null(result.HandlerName);
+        Assert.Null(result.HandlerResult);
+    }
+
+    [Fact]
     public async Task Missing_handler_returns_missing_handler()
     {
         var router = CreateRouter();
@@ -76,6 +121,58 @@ public sealed class ActionRouterTests
         Assert.False(result.IsRouted);
         Assert.Equal(ActionRouteStatus.MissingHandler, result.Status);
         Assert.Null(result.HandlerName);
+        Assert.Null(result.HandlerResult);
+    }
+
+    [Fact]
+    public async Task Handler_result_is_attached_to_action_route_result()
+    {
+        var router = CreateCandidateRouter();
+        var request = CreateRequest(ValidPacket(0x63, 0x04), SessionState.HandshakeDone);
+
+        var result = await router.RouteAsync(request);
+
+        Assert.NotNull(result.HandlerResult);
+        Assert.Equal(nameof(LoginRequestCandidateHandler), result.HandlerResult.HandlerName);
+        Assert.Equal(ActionHandlerStatus.CandidateHandled, result.HandlerResult.Status);
+        Assert.Contains("candidate-only", string.Join(" ", result.Notes), StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Candidate_handlers_do_not_generate_response_packets()
+    {
+        var router = CreateCandidateRouter();
+        var handshake = await router.RouteAsync(CreateRequest(ValidPacket(0x00, 0x01), SessionState.Connected));
+        var login = await router.RouteAsync(CreateRequest(ValidPacket(0x63, 0x04), SessionState.HandshakeDone));
+
+        Assert.False(handshake.HandlerResult?.HasResponsePackets);
+        Assert.False(login.HandlerResult?.HasResponsePackets);
+        Assert.Empty(handshake.HandlerResult?.ResponsePackets ?? Array.Empty<byte[]>());
+        Assert.Empty(login.HandlerResult?.ResponsePackets ?? Array.Empty<byte[]>());
+    }
+
+    [Fact]
+    public void Login_request_candidate_handler_does_not_expose_password_field()
+    {
+        var propertyNames = typeof(LoginRequestCandidateHandler)
+            .GetProperties()
+            .Select(property => property.Name)
+            .Concat(typeof(ActionHandlerResult).GetProperties().Select(property => property.Name))
+            .Concat(typeof(ActionHandlerContext).GetProperties().Select(property => property.Name))
+            .ToArray();
+
+        Assert.DoesNotContain(propertyNames, name => name.Contains("password", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task Candidate_handlers_preserve_source_label_and_pending_evidence_status()
+    {
+        var router = CreateCandidateRouter();
+        var result = await router.RouteAsync(CreateRequest(ValidPacket(0x63, 0x04), SessionState.HandshakeDone));
+
+        Assert.Equal("reference:muayad", result.SourceLabel);
+        Assert.Equal(ProtocolEvidenceStatus.PendingTargetClientTrace, result.EvidenceStatus);
+        Assert.NotEqual(ProtocolEvidenceStatus.Confirmed, result.EvidenceStatus);
     }
 
     [Fact]
@@ -219,6 +316,13 @@ public sealed class ActionRouterTests
             handlerRegistry ?? new ActionHandlerRegistry());
     }
 
+    private static ActionRouter CreateCandidateRouter()
+    {
+        return new ActionRouter(
+            LegacyProtocolContractCatalog.CreateDefaultRegistry(),
+            CandidateActionHandlerCatalog.CreateDefaultRegistry());
+    }
+
     private static ActionRouteRequest CreateRequest(
         PacketDecodeResult packet,
         SessionState sessionState,
@@ -262,5 +366,26 @@ public sealed class ActionRouterTests
                     PacketValidationErrorCode.InvalidHeader,
                     "Synthetic invalid packet for ActionRouter test.")
             });
+    }
+
+    private sealed class TrackingActionHandlerRegistry : IActionHandlerRegistry
+    {
+        public int ResolveCount { get; private set; }
+
+        public void Register(ActionHandlerDescriptor descriptor)
+        {
+            ArgumentNullException.ThrowIfNull(descriptor);
+        }
+
+        public bool TryResolve(LegacyProtocolContract contract, out ActionHandlerDescriptor? descriptor)
+        {
+            ArgumentNullException.ThrowIfNull(contract);
+            ResolveCount++;
+            descriptor = new ActionHandlerDescriptor(
+                contract.Key,
+                "UnexpectedNoOp",
+                new NoOpActionHandler("UnexpectedNoOp"));
+            return true;
+        }
     }
 }

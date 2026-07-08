@@ -17,7 +17,8 @@ public sealed class ActionRouteResult
         IReadOnlyList<PacketValidationError>? validationErrors,
         string sourceLabel,
         ProtocolEvidenceStatus evidenceStatus,
-        IReadOnlyList<string>? notes)
+        IReadOnlyList<string>? notes,
+        ActionHandlerResult? handlerResult = null)
     {
         IsRouted = isRouted;
         Status = status;
@@ -30,6 +31,7 @@ public sealed class ActionRouteResult
         SourceLabel = sourceLabel;
         EvidenceStatus = evidenceStatus;
         Notes = notes ?? Array.Empty<string>();
+        HandlerResult = handlerResult;
     }
 
     public bool IsRouted { get; }
@@ -54,7 +56,44 @@ public sealed class ActionRouteResult
 
     public IReadOnlyList<string> Notes { get; }
 
+    public ActionHandlerResult? HandlerResult { get; }
+
+    public ActionHandlerStatus? HandlerStatus => HandlerResult?.Status;
+
+    public IReadOnlyList<string> HandlerNotes => HandlerResult?.Notes ?? Array.Empty<string>();
+
     public string? ProtocolName => Contract?.ProtocolName;
 
     public string? ChineseBehavior => Contract?.ChineseBehavior;
+
+    public static ActionRouteResult FromHandler(
+        LegacyProtocolContract contract,
+        SessionPacketKind packetKind,
+        SessionStateGuardResult sessionGuardResult,
+        IReadOnlyList<PacketValidationError>? validationErrors,
+        ActionHandlerResult handlerResult)
+    {
+        ArgumentNullException.ThrowIfNull(contract);
+        ArgumentNullException.ThrowIfNull(sessionGuardResult);
+        ArgumentNullException.ThrowIfNull(handlerResult);
+
+        var notes = contract.Notes
+            .Concat(handlerResult.Notes)
+            .Concat(new[] { "candidate handler result only; no gameplay business executed" })
+            .ToArray();
+
+        return new ActionRouteResult(
+            true,
+            ActionRouteStatus.CandidateHandled,
+            contract,
+            handlerResult.HandlerName,
+            packetKind,
+            sessionGuardResult.Allowed,
+            null,
+            validationErrors,
+            contract.SourceLabelText,
+            contract.EvidenceStatus,
+            notes,
+            handlerResult);
+    }
 }

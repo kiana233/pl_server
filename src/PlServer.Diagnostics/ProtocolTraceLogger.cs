@@ -28,6 +28,8 @@ public sealed class ProtocolTraceLogger
         string result = "decoded",
         string? routeStatus = null,
         string? handler = null,
+        string? handlerStatus = null,
+        IReadOnlyList<string>? handlerNotes = null,
         ProtocolTraceResourceCheck[]? resourceChecks = null,
         ProtocolTraceStateChange? stateChange = null)
     {
@@ -50,6 +52,8 @@ public sealed class ProtocolTraceLogger
             ProtocolName = behavior.ProtocolName,
             Behavior = behavior.Behavior,
             Handler = handler ?? behavior.Handler,
+            HandlerStatus = handlerStatus,
+            HandlerNotes = handlerNotes ?? Array.Empty<string>(),
             RouteStatus = routeStatus,
             Result = decodeResult.IsValid ? result : "invalid",
             SourceLabel = behavior.SourceLabel,
@@ -70,6 +74,8 @@ public sealed class ProtocolTraceLogger
         string result = "decoded",
         string? routeStatus = null,
         string? handler = null,
+        string? handlerStatus = null,
+        IReadOnlyList<string>? handlerNotes = null,
         ProtocolTraceResourceCheck[]? resourceChecks = null,
         ProtocolTraceStateChange? stateChange = null)
     {
@@ -83,6 +89,8 @@ public sealed class ProtocolTraceLogger
             result,
             routeStatus,
             handler,
+            handlerStatus,
+            handlerNotes,
             resourceChecks,
             stateChange);
 

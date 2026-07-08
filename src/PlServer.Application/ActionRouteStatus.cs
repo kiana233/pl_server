@@ -2,6 +2,7 @@ namespace PlServer.Application;
 
 public enum ActionRouteStatus
 {
+    CandidateHandled,
     RoutedToNoOp,
     MissingContract,
     MissingHandler,

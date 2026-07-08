@@ -220,7 +220,7 @@ public sealed class TcpServerHost : ITcpServerHost, IAsyncDisposable
         var traceLogger = new ProtocolTraceLogger(sink);
         var actionRouter = new ActionRouter(
             LegacyProtocolContractCatalog.CreateDefaultRegistry(),
-            new ActionHandlerRegistry());
+            CandidateActionHandlerCatalog.CreateDefaultRegistry());
 
         return new ReceivePipeline(new PacketRoutePipeline(packetCodec, traceLogger, actionRouter));
     }

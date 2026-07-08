@@ -43,7 +43,11 @@ public sealed class NoOpActionHandler : IActionHandler
             request.PacketDecodeResult.ValidationErrors,
             contract.SourceLabelText,
             contract.EvidenceStatus,
-            new[] { "handler skeleton only", "no gameplay or login business executed" });
+            new[] { "handler skeleton only", "no gameplay or login business executed" },
+            new ActionHandlerResult(
+                HandlerName,
+                ActionHandlerStatus.NotImplementedCandidate,
+                new[] { "no-op handler result only", "no response packet generated" }));
 
         return ValueTask.FromResult(result);
     }

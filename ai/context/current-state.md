@@ -4,7 +4,7 @@ Date: 2026-07-08
 
 ## Current Phase
 
-Phase 12 / Protocol Trace State-Change Enrichment
+Phase 13 / Login And Handshake Candidate Handlers
 
 ## Repository Paths
 
@@ -15,7 +15,7 @@ Phase 12 / Protocol Trace State-Change Enrichment
 ## Current GitHub Visible State
 
 - Remote: `origin https://github.com/kiana233/pl_server.git`
-- Task branch: `task/0021-implement-protocol-trace-state-change-enrichment`
+- Task branch: `task/0022-implement-login-handshake-candidate`
 - Base branch: `main`
 
 ## Current Local Scan State
@@ -31,7 +31,8 @@ Phase 12 / Protocol Trace State-Change Enrichment
 - TASK-0018 implemented frame splitting and connection receive pipeline hardening.
 - TASK-0019 implemented connection-level SessionState update pipeline.
 - TASK-0020 implemented Host-level smoke tests and a synthetic TCP client test utility.
-- TASK-0021 implements ProtocolTrace state-change enrichment.
+- TASK-0021 implemented ProtocolTrace state-change enrichment.
+- TASK-0022 implements login / handshake candidate handlers.
 
 ## Implemented Content
 
@@ -40,16 +41,20 @@ Phase 12 / Protocol Trace State-Change Enrichment
 - `PlServer.Replay` can replay trace-derived packet steps through PacketCodec.
 - `PlServer.Session` contains session classification, state machine, and SessionStateGuard.
 - `PlServer.LegacyProtocol` contains protocol contract metadata and seeded candidate contracts.
-- `PlServer.Application` contains ActionRouter skeleton and no-op or missing-handler route results.
+- `PlServer.Application` contains ActionRouter skeleton, candidate handler result models, AC0 HandshakeCandidate handler, and AC63/SubAC4 LoginRequestCandidate handler.
 - `PlServer.Network` contains TCP host skeleton, frame splitter, connection receive loop, receive pipeline, packet route pipeline, and connection session updater.
 - `tests/PlServer.Network.Tests` contains synthetic TCP client host smoke coverage.
 
-## Protocol Trace State-Change Scope
+## Login And Handshake Candidate Handler Scope
 
 - Synthetic TCP client tests connect to `TcpServerHost` on loopback port 0.
 - Host smoke tests exercise `TcpServerHost -> ConnectionReceiveLoop -> PacketFrameReadBuffer -> ReceivePipeline -> PacketCodec -> ProtocolTraceLogger -> ActionRouter skeleton -> ConnectionSessionUpdater`.
 - AC0 handshake candidate synthetic packets advance `Connected` to `HandshakeDone`.
 - AC63/SubAC4 login request candidate synthetic packets advance `HandshakeDone` to `LoginPending`.
+- AC0 HandshakeCandidateHandler records candidate-only handling and does not generate response packets.
+- AC63/SubAC4 LoginRequestCandidateHandler records candidate-only handling, AC/SubAC, and payload length while keeping the payload opaque.
+- Candidate handlers return handler status and notes with pending-target-client-trace wording.
+- Trace events include handler name, handler status, and handler notes.
 - Sticky frames and partial frame chunks are covered through the real host socket path.
 - Malformed bytes are covered without crashing the host.
 - Protocol trace events are written after connection session update so the same event can include state-change details.
@@ -59,8 +64,8 @@ Phase 12 / Protocol Trace State-Change Enrichment
 
 ## Not Implemented
 
-- Real AC handler dispatch is not implemented.
-- AC0, AC63, AC06, login response, character selection, enter-map response, movement broadcast, inventory, equipment, NPC, quests, warp, and battle are not implemented.
+- Real AC handler business dispatch is not implemented beyond candidate-only AC0 and AC63/SubAC4 handler skeletons.
+- Real account authentication, login response, character list response, character selection, enter-map response, movement broadcast, inventory, equipment, NPC, quests, warp, and battle are not implemented.
 - GUI management functionality is not implemented beyond the existing minimal WPF shell.
 - TCP receive, session update, and host smoke tests use synthetic traffic only and do not confirm target-client behavior.
 - SendPipeline does not generate login, enter-map, movement, or gameplay responses.
@@ -73,4 +78,4 @@ Phase 12 / Protocol Trace State-Change Enrichment
 
 ## Next Suggested Task
 
-TASK-0022-implement-login-handshake-candidate
+TASK-0023-implement-sanitized-target-client-trace-capture-guide

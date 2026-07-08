@@ -53,7 +53,9 @@ public sealed class PacketRoutePipeline
             connection.CurrentSessionState.ToString(),
             result: "received",
             routeStatus: routeResult.Status.ToString(),
-            handler: routeResult.HandlerName);
+            handler: routeResult.HandlerName,
+            handlerStatus: routeResult.HandlerStatus?.ToString(),
+            handlerNotes: routeResult.HandlerNotes);
 
         return new ReceivedPacketContext(connection, rawBytes.ToArray(), decodeResult, routeResult, traceEvent);
     }
