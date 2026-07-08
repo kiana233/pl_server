@@ -10,9 +10,19 @@ public sealed class SessionStateMachine
     }
 
     public SessionStateMachine(SessionStateGuard guard)
+        : this(SessionState.Connected, guard)
+    {
+    }
+
+    public SessionStateMachine(SessionState initialState)
+        : this(initialState, new SessionStateGuard())
+    {
+    }
+
+    public SessionStateMachine(SessionState initialState, SessionStateGuard guard)
     {
         _guard = guard;
-        CurrentState = SessionState.Connected;
+        CurrentState = initialState;
     }
 
     public SessionState CurrentState { get; private set; }
