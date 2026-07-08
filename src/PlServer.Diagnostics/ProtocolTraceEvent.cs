@@ -34,6 +34,8 @@ public sealed class ProtocolTraceEvent
 
     public string? Handler { get; init; }
 
+    public string? RouteStatus { get; init; }
+
     public string Result { get; init; } = string.Empty;
 
     public ProtocolTraceSourceLabel SourceLabel { get; init; } = ProtocolTraceSourceLabel.Unknown;
@@ -45,4 +47,37 @@ public sealed class ProtocolTraceEvent
     public IReadOnlyList<ProtocolTraceResourceCheck> ResourceChecks { get; init; } = Array.Empty<ProtocolTraceResourceCheck>();
 
     public ProtocolTraceStateChange? StateChange { get; init; }
+
+    public ProtocolTraceEvent WithStateChange(
+        ProtocolTraceStateChange stateChange,
+        string? sessionState = null)
+    {
+        ArgumentNullException.ThrowIfNull(stateChange);
+
+        return new ProtocolTraceEvent
+        {
+            Timestamp = Timestamp,
+            Direction = Direction,
+            ConnectionId = ConnectionId,
+            AccountName = AccountName,
+            CharacterName = CharacterName,
+            SessionState = sessionState ?? SessionState,
+            RawHex = RawHex,
+            DecodedHex = DecodedHex,
+            Header = Header,
+            PayloadLength = PayloadLength,
+            Ac = Ac,
+            SubAc = SubAc,
+            ProtocolName = ProtocolName,
+            Behavior = Behavior,
+            Handler = Handler,
+            RouteStatus = RouteStatus,
+            Result = Result,
+            SourceLabel = SourceLabel,
+            Status = Status,
+            ValidationErrors = ValidationErrors,
+            ResourceChecks = ResourceChecks,
+            StateChange = stateChange
+        };
+    }
 }

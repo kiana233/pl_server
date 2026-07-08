@@ -32,16 +32,6 @@ public sealed class PacketRoutePipeline
 
         var decodeResult = _packetCodec.Decode(rawBytes);
 
-        _traceLogger.LogPacketDecodeResult(
-            ProtocolTraceDirection.C2S,
-            connection.ConnectionId,
-            decodeResult,
-            connection.AccountName,
-            connection.CharacterName,
-            connection.CurrentSessionState.ToString(),
-            result: "received");
-        _traceLogger.Flush();
-
         var routeRequest = new ActionRouteRequest(
             connection.ConnectionId,
             connection.CurrentSessionState,
@@ -54,6 +44,24 @@ public sealed class PacketRoutePipeline
             .RouteAsync(routeRequest, cancellationToken)
             .ConfigureAwait(false);
 
-        return new ReceivedPacketContext(connection, rawBytes.ToArray(), decodeResult, routeResult);
+        var traceEvent = _traceLogger.CreatePacketDecodeEvent(
+            ProtocolTraceDirection.C2S,
+            connection.ConnectionId,
+            decodeResult,
+            connection.AccountName,
+            connection.CharacterName,
+            connection.CurrentSessionState.ToString(),
+            result: "received",
+            routeStatus: routeResult.Status.ToString(),
+            handler: routeResult.HandlerName);
+
+        return new ReceivedPacketContext(connection, rawBytes.ToArray(), decodeResult, routeResult, traceEvent);
+    }
+
+    public void WriteTrace(ProtocolTraceEvent traceEvent)
+    {
+        ArgumentNullException.ThrowIfNull(traceEvent);
+        _traceLogger.Log(traceEvent);
+        _traceLogger.Flush();
     }
 }

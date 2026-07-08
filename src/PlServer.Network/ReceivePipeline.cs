@@ -1,3 +1,5 @@
+using PlServer.Diagnostics;
+
 namespace PlServer.Network;
 
 public sealed class ReceivePipeline
@@ -47,6 +49,11 @@ public sealed class ReceivePipeline
             packet.Connection,
             packet.DecodeResult,
             packet.RouteResult);
+        var stateChange = ToProtocolTraceStateChange(updateResult);
+        var traceEvent = packet.TraceEvent.WithStateChange(
+            stateChange,
+            updateResult.CurrentState.ToString());
+        _packetRoutePipeline.WriteTrace(traceEvent);
 
         return new ReceivedPacketResult(
             packet.Connection,
@@ -54,5 +61,22 @@ public sealed class ReceivePipeline
             packet.DecodeResult,
             packet.RouteResult,
             updateResult);
+    }
+
+    private static ProtocolTraceStateChange ToProtocolTraceStateChange(
+        ConnectionSessionUpdateResult updateResult)
+    {
+        return new ProtocolTraceStateChange(
+            updateResult.PreviousState.ToString(),
+            updateResult.CurrentState.ToString(),
+            updateResult.PacketKind.ToString(),
+            updateResult.WasStateChanged,
+            updateResult.RejectionReason,
+            updateResult.Errors
+                .Select(error => new ProtocolTraceStateChangeError(
+                    error.Code.ToString(),
+                    error.Message))
+                .ToArray(),
+            updateResult.Notes.ToArray());
     }
 }

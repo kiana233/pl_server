@@ -4,19 +4,19 @@ Date: 2026-07-08
 
 ## Phase
 
-Phase 11 / Host smoke test and synthetic client completed.
+Phase 12 / Protocol trace state-change enrichment completed.
 
 ## Last Completed Task
 
-`ai/tasks/TASK-0020-implement-host-smoke-test-and-synthetic-client.md`
+`ai/tasks/TASK-0021-implement-protocol-trace-state-change-enrichment.md`
 
 ## Active Task
 
-None. Waiting for ChatGPT review and TASK-0021 creation.
+None. Waiting for ChatGPT review and TASK-0022 creation.
 
 ## Current Goal
 
-Prepare to enrich protocol trace state-change records or implement the next login handshake candidate task in TASK-0021.
+Prepare to implement the next login handshake candidate task or sanitized trace capture guidelines in TASK-0022.
 
 ## Current Constraints
 
@@ -28,9 +28,10 @@ Prepare to enrich protocol trace state-change records or implement the next logi
 - Synthetic host smoke tests are not target-client trace.
 - TCP receive pipeline routes only to ActionRouter skeleton results and no-op or missing-handler outcomes.
 - Connection session updates are candidate-only and do not execute login or gameplay behavior.
+- Packet trace events can carry candidate session previous/current state, state-change flag, rejection reason, errors, and notes.
 - Host smoke tests do not generate login, enter-map, movement, or gameplay response packets.
 - Codex may commit and push task branches, but must not merge `main` without ChatGPT review approval.
 
 ## Next Suggested Task
 
-`TASK-0021-implement-protocol-trace-state-change-enrichment`
+`TASK-0022-implement-login-handshake-candidate`

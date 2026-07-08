@@ -29,6 +29,13 @@ public sealed class HostSmokeTests
         await client.SendAsync(HostSmokeTestFixture.Frame(0x00, 0x01));
 
         Assert.True(await fixture.WaitForSessionStateAsync(SessionState.HandshakeDone));
+        Assert.True(await fixture.WaitForTraceCountAsync(1));
+        AssertStateChange(
+            Assert.Single(fixture.TraceSink.Events).StateChange,
+            "Connected",
+            "HandshakeDone",
+            "HandshakeCandidate",
+            wasStateChanged: true);
     }
 
     [Fact]
@@ -43,6 +50,13 @@ public sealed class HostSmokeTests
         await client.SendAsync(HostSmokeTestFixture.Frame(0x63, 0x04));
 
         Assert.True(await fixture.WaitForSessionStateAsync(SessionState.LoginPending));
+        Assert.True(await fixture.WaitForTraceCountAsync(2));
+        AssertStateChange(
+            fixture.TraceSink.Events[1].StateChange,
+            "HandshakeDone",
+            "LoginPending",
+            "LoginRequestCandidate",
+            wasStateChanged: true);
     }
 
     [Fact]
@@ -67,6 +81,18 @@ public sealed class HostSmokeTests
                 Assert.Equal((byte?)0x63, second.Ac);
                 Assert.Equal((byte?)0x04, second.SubAc);
             });
+        AssertStateChange(
+            fixture.TraceSink.Events[0].StateChange,
+            "Connected",
+            "HandshakeDone",
+            "HandshakeCandidate",
+            wasStateChanged: true);
+        AssertStateChange(
+            fixture.TraceSink.Events[1].StateChange,
+            "HandshakeDone",
+            "LoginPending",
+            "LoginRequestCandidate",
+            wasStateChanged: true);
     }
 
     [Fact]
@@ -80,10 +106,12 @@ public sealed class HostSmokeTests
         await client.SendAsync(frame.Take(3).ToArray());
         await Task.Delay(100);
         Assert.Equal(SessionState.Connected, (await fixture.WaitForConnectionAsync()).CurrentSessionState);
+        Assert.Empty(fixture.TraceSink.Events);
 
         await client.SendAsync(frame.Skip(3).ToArray());
 
         Assert.True(await fixture.WaitForSessionStateAsync(SessionState.HandshakeDone));
+        Assert.True(await fixture.WaitForTraceCountAsync(1));
     }
 
     [Fact]
@@ -115,6 +143,35 @@ public sealed class HostSmokeTests
         await Task.Delay(100);
 
         Assert.Equal(SessionState.Connected, (await fixture.WaitForConnectionAsync()).CurrentSessionState);
+        var stateChange = Assert.Single(fixture.TraceSink.Events).StateChange;
+        AssertStateChange(
+            stateChange,
+            "Connected",
+            "Connected",
+            "MovementCandidate",
+            wasStateChanged: false);
+        Assert.NotNull(stateChange!.RejectionReason);
+        Assert.NotEmpty(stateChange.Errors);
+    }
+
+    [Fact]
+    public async Task Host_invalid_packet_trace_preserves_validation_errors_and_no_false_state_change()
+    {
+        await using var fixture = new HostSmokeTestFixture();
+        await fixture.StartAsync();
+        await using var client = await fixture.ConnectClientAsync();
+
+        await client.SendAsync(new byte[] { 0xF4, 0x44, 0x00, 0x00 });
+
+        Assert.True(await fixture.WaitForTraceCountAsync(1));
+        var traceEvent = Assert.Single(fixture.TraceSink.Events);
+        Assert.NotEmpty(traceEvent.ValidationErrors);
+        AssertStateChange(
+            traceEvent.StateChange,
+            "Connected",
+            "Connected",
+            "InvalidPacket",
+            wasStateChanged: false);
     }
 
     [Fact]
@@ -132,6 +189,7 @@ public sealed class HostSmokeTests
         Assert.Equal((byte?)0x04, traceEvent.SubAc);
         Assert.NotEqual(ProtocolTraceSourceLabel.TraceClient, traceEvent.SourceLabel);
         Assert.NotEqual(ProtocolTraceStatus.Confirmed, traceEvent.Status);
+        Assert.NotNull(traceEvent.StateChange);
     }
 
     [Fact]
@@ -192,5 +250,19 @@ public sealed class HostSmokeTests
 
         Assert.True(await fixture.WaitForTraceCountAsync(1));
         Assert.IsType<HostSmokeTestFixture.InMemoryProtocolTraceSink>(fixture.TraceSink);
+    }
+
+    private static void AssertStateChange(
+        ProtocolTraceStateChange? stateChange,
+        string previousState,
+        string currentState,
+        string packetKind,
+        bool wasStateChanged)
+    {
+        Assert.NotNull(stateChange);
+        Assert.Equal(previousState, stateChange.PreviousState);
+        Assert.Equal(currentState, stateChange.CurrentState);
+        Assert.Equal(packetKind, stateChange.PacketKind);
+        Assert.Equal(wasStateChanged, stateChange.WasStateChanged);
     }
 }

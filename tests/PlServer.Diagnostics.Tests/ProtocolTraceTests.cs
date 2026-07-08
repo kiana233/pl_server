@@ -31,6 +31,17 @@ public sealed class ProtocolTraceTests
     }
 
     [Fact]
+    public void ProtocolTraceStateChange_can_represent_previous_and_current_state()
+    {
+        var stateChange = CreateStateChange();
+
+        Assert.Equal("Connected", stateChange.PreviousState);
+        Assert.Equal("HandshakeDone", stateChange.CurrentState);
+        Assert.Equal("HandshakeCandidate", stateChange.PacketKind);
+        Assert.True(stateChange.WasStateChanged);
+    }
+
+    [Fact]
     public void Json_contains_direction_ac_subac_rawHex_and_decodedHex()
     {
         using var document = JsonDocument.Parse(ProtocolTraceFormatter.FormatJsonLine(CreateTraceEvent()));
@@ -41,6 +52,44 @@ public sealed class ProtocolTraceTests
         Assert.Equal(0x04, root.GetProperty("subAc").GetByte());
         Assert.Equal("F4 44 02 00 63 04", root.GetProperty("rawHex").GetString());
         Assert.Equal("F4 44 02 00 63 04", root.GetProperty("decodedHex").GetString());
+    }
+
+    [Fact]
+    public void Json_contains_state_change_previous_current_and_wasStateChanged()
+    {
+        using var document = JsonDocument.Parse(ProtocolTraceFormatter.FormatJsonLine(CreateTraceEvent(CreateStateChange())));
+        var stateChange = document.RootElement.GetProperty("stateChange");
+
+        Assert.Equal("Connected", stateChange.GetProperty("previousState").GetString());
+        Assert.Equal("HandshakeDone", stateChange.GetProperty("currentState").GetString());
+        Assert.Equal("HandshakeCandidate", stateChange.GetProperty("packetKind").GetString());
+        Assert.True(stateChange.GetProperty("wasStateChanged").GetBoolean());
+    }
+
+    [Fact]
+    public void Json_contains_rejectionReason_when_state_change_is_rejected()
+    {
+        var stateChange = new ProtocolTraceStateChange(
+            "Connected",
+            "Connected",
+            "MovementCandidate",
+            false,
+            "Movement candidates are only allowed after the session reaches InMap.",
+            new[]
+            {
+                new ProtocolTraceStateChangeError(
+                    "MovementBeforeInMap",
+                    "Movement candidates are only allowed after the session reaches InMap.")
+            },
+            new[] { "candidate session update only" });
+
+        using var document = JsonDocument.Parse(ProtocolTraceFormatter.FormatJsonLine(CreateTraceEvent(stateChange)));
+        var stateChangeJson = document.RootElement.GetProperty("stateChange");
+
+        Assert.Equal(
+            "Movement candidates are only allowed after the session reaches InMap.",
+            stateChangeJson.GetProperty("rejectionReason").GetString());
+        Assert.Single(stateChangeJson.GetProperty("errors").EnumerateArray());
     }
 
     [Fact]
@@ -57,6 +106,16 @@ public sealed class ProtocolTraceTests
         using var document = JsonDocument.Parse(ProtocolTraceFormatter.FormatJsonLine(CreateTraceEvent()));
 
         Assert.Equal("pending-target-client-trace", document.RootElement.GetProperty("status").GetString());
+    }
+
+    [Fact]
+    public void Json_for_synthetic_or_reference_event_is_not_trace_client_or_confirmed()
+    {
+        using var document = JsonDocument.Parse(ProtocolTraceFormatter.FormatJsonLine(CreateTraceEvent(CreateStateChange())));
+        var root = document.RootElement;
+
+        Assert.NotEqual("trace:client", root.GetProperty("sourceLabel").GetString());
+        Assert.NotEqual("confirmed", root.GetProperty("status").GetString());
     }
 
     [Fact]
@@ -154,7 +213,15 @@ public sealed class ProtocolTraceTests
         Assert.DoesNotContain(propertyNames, name => name.Contains("password", StringComparison.OrdinalIgnoreCase));
     }
 
-    private static ProtocolTraceEvent CreateTraceEvent()
+    [Fact]
+    public void Enriched_json_has_no_sensitive_password_field()
+    {
+        var json = ProtocolTraceFormatter.FormatJsonLine(CreateTraceEvent(CreateStateChange()));
+
+        Assert.DoesNotContain("password", json, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static ProtocolTraceEvent CreateTraceEvent(ProtocolTraceStateChange? stateChange = null)
     {
         return new ProtocolTraceEvent
         {
@@ -169,10 +236,24 @@ public sealed class ProtocolTraceTests
             SubAc = 0x04,
             ProtocolName = "LoginRequestCandidate",
             Behavior = "玩家登录请求候选包",
+            RouteStatus = "MissingHandler",
             Result = "decoded",
             SourceLabel = ProtocolTraceSourceLabel.ReferenceMuayad,
-            Status = ProtocolTraceStatus.PendingTargetClientTrace
+            Status = ProtocolTraceStatus.PendingTargetClientTrace,
+            StateChange = stateChange
         };
+    }
+
+    private static ProtocolTraceStateChange CreateStateChange()
+    {
+        return new ProtocolTraceStateChange(
+            "Connected",
+            "HandshakeDone",
+            "HandshakeCandidate",
+            true,
+            null,
+            Array.Empty<ProtocolTraceStateChangeError>(),
+            new[] { "candidate session update only" });
     }
 
     private static string CreateTempTracePath()
