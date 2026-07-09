@@ -78,4 +78,23 @@ public sealed class LoginRequestParseResult
             notes,
             context.Request.PacketDecodeResult.ValidationErrors);
     }
+
+    public static LoginRequestParseResult ParsedCandidate(
+        ActionHandlerContext context,
+        IReadOnlyList<LoginRequestField> fields,
+        IReadOnlyList<string> notes)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(fields);
+        ArgumentNullException.ThrowIfNull(notes);
+
+        return new LoginRequestParseResult(
+            LoginRequestParseStatus.ParsedCandidate,
+            context.Contract.SourceLabelText,
+            context.Contract.EvidenceStatus,
+            context.PayloadLength,
+            fields,
+            notes,
+            context.Request.PacketDecodeResult.ValidationErrors);
+    }
 }

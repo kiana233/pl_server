@@ -245,6 +245,29 @@ public sealed class HostSmokeTests
     }
 
     [Fact]
+    public async Task Synthetic_login_candidate_trace_contains_no_response_generated_note()
+    {
+        await using var fixture = new HostSmokeTestFixture();
+        await fixture.StartAsync();
+        await using var client = await fixture.ConnectClientAsync();
+
+        await client.SendChunksAsync(
+            HostSmokeTestFixture.Frame(0x00, 0x01),
+            HostSmokeTestFixture.Frame(0x63, 0x04));
+
+        Assert.True(await fixture.WaitForSessionStateAsync(SessionState.LoginPending));
+        Assert.True(await fixture.WaitForTraceCountAsync(2));
+        var loginTrace = fixture.TraceSink.Events[1];
+        var notes = string.Join(" ", loginTrace.HandlerNotes);
+
+        Assert.Contains("response planning status", notes, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("no response generated", notes, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("not confirmed", notes, StringComparison.OrdinalIgnoreCase);
+        Assert.NotEqual(ProtocolTraceSourceLabel.TraceClient, loginTrace.SourceLabel);
+        Assert.NotEqual(ProtocolTraceStatus.Confirmed, loginTrace.Status);
+    }
+
+    [Fact]
     public async Task Host_does_not_send_login_response_automatically()
     {
         await using var fixture = new HostSmokeTestFixture();
@@ -283,6 +306,9 @@ public sealed class HostSmokeTests
         Assert.Contains(
             fixture.TraceSink.Events[1].HandlerNotes,
             note => note.Contains("no character list generated", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(
+            fixture.TraceSink.Events[1].HandlerNotes,
+            note => note.Contains("response plan should generate packet: False", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
