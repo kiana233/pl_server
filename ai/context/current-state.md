@@ -4,7 +4,7 @@ Date: 2026-07-09
 
 ## Current Phase
 
-Phase 14 / Sanitized Target Client Trace Capture Guide
+Phase 15 / Account Repository Skeleton
 
 ## Repository Paths
 
@@ -15,7 +15,7 @@ Phase 14 / Sanitized Target Client Trace Capture Guide
 ## Current GitHub Visible State
 
 - Remote: `origin https://github.com/kiana233/pl_server.git`
-- Task branch: `task/0023-implement-sanitized-target-client-trace-capture-guide`
+- Task branch: `task/0024-implement-account-repository-skeleton`
 - Base branch: `main`
 
 ## Current Local Scan State
@@ -33,37 +33,39 @@ Phase 14 / Sanitized Target Client Trace Capture Guide
 - TASK-0020 implemented Host-level smoke tests and a synthetic TCP client test utility.
 - TASK-0021 implemented ProtocolTrace state-change enrichment.
 - TASK-0022 implemented login / handshake candidate handlers.
-- TASK-0023 establishes sanitized target-client trace capture, sanitization, and evidence promotion guidance.
+- TASK-0023 established sanitized target-client trace capture, sanitization, and evidence promotion guidance.
+- TASK-0024 creates an account repository skeleton and candidate-only account lookup service.
 
 ## Implemented Content
 
+- `PlServer.Core` contains AccountId, AccountName, AccountStatus, and AccountRecord model types.
+- `PlServer.Application` contains ActionRouter skeleton, candidate handler result models, AC0 HandshakeCandidate handler, AC63/SubAC4 LoginRequestCandidate handler, account repository interfaces, credential verifier interface, and AccountLoginCandidateService.
+- `PlServer.Persistence` contains an in-memory account repository for skeleton and test use only.
 - `PlServer.Protocol` contains PacketCodec, packet encode/decode, validation errors, XOR helper, packet reader, and packet writer.
 - `PlServer.Diagnostics` contains ProtocolTraceLogger, state-change trace models, and JSON Lines trace sink support.
 - `PlServer.Replay` can replay trace-derived packet steps through PacketCodec.
 - `PlServer.Session` contains session classification, state machine, and SessionStateGuard.
 - `PlServer.LegacyProtocol` contains protocol contract metadata and seeded candidate contracts.
-- `PlServer.Application` contains ActionRouter skeleton, candidate handler result models, AC0 HandshakeCandidate handler, and AC63/SubAC4 LoginRequestCandidate handler.
 - `PlServer.Network` contains TCP host skeleton, frame splitter, connection receive loop, receive pipeline, packet route pipeline, and connection session updater.
-- `tests/PlServer.Network.Tests` contains synthetic TCP client host smoke coverage.
-- `docs` contains target-client trace capture, sanitization, and evidence promotion policies.
-- `traces/templates` contains fake sample-only JSONL schema examples.
+- `tests/PlServer.Application.Tests` covers account candidate service outcomes and confirms login payload remains opaque.
+- `tests/PlServer.Persistence.Tests` covers seeded in-memory lookup, case-insensitive lookup, duplicate rejection, missing lookup, id lookup, and no real credential/database behavior.
+
+## Account Repository Skeleton Scope
+
+- Account repository behavior is skeleton-only and uses fake in-memory data for tests.
+- AccountLoginCandidateService can return AccountNotFound, AccountDisabled, InvalidCredentials, or CandidateAuthenticated.
+- CandidateAuthenticated is not a protocol login success.
+- CandidateAuthenticated does not generate login response packets or character list responses.
+- LoginRequestCandidateHandler still keeps payload bytes opaque and does not invoke the account repository.
+- Credential verification is an interface only; no plaintext credential validation is implemented.
+- AccountRecord does not include plaintext password, token, cookie, or session key fields.
+- InMemoryAccountRepository has no real database connection and no persistent storage.
+- Account lookup behavior remains candidate-only and does not confirm target-client protocol behavior.
 
 ## Sanitized Target Client Trace Scope
 
 - Synthetic TCP client tests connect to `TcpServerHost` on loopback port 0.
-- Host smoke tests exercise `TcpServerHost -> ConnectionReceiveLoop -> PacketFrameReadBuffer -> ReceivePipeline -> PacketCodec -> ProtocolTraceLogger -> ActionRouter skeleton -> ConnectionSessionUpdater`.
-- AC0 handshake candidate synthetic packets advance `Connected` to `HandshakeDone`.
-- AC63/SubAC4 login request candidate synthetic packets advance `HandshakeDone` to `LoginPending`.
-- AC0 HandshakeCandidateHandler records candidate-only handling and does not generate response packets.
-- AC63/SubAC4 LoginRequestCandidateHandler records candidate-only handling, AC/SubAC, and payload length while keeping the payload opaque.
-- Candidate handlers return handler status and notes with pending-target-client-trace wording.
-- Trace events include handler name, handler status, and handler notes.
-- Sticky frames and partial frame chunks are covered through the real host socket path.
-- Malformed bytes are covered without crashing the host.
-- Protocol trace events are written after connection session update so the same event can include state-change details.
-- Each packet trace can carry session previous state, current state, packet kind, state-change flag, rejection reason, transition errors, and notes.
-- Movement-before-map and invalid-packet traces record no false state change.
-- Synthetic client traffic is explicitly not target-client trace and does not confirm protocol facts.
+- Host smoke tests use synthetic traffic only and do not confirm target-client behavior.
 - Real target-client trace is still absent from the repository.
 - Any trace entering the repository must be sanitized first.
 - Synthetic tests still cannot be promoted to confirmed.
@@ -71,20 +73,20 @@ Phase 14 / Sanitized Target Client Trace Capture Guide
 
 ## Not Implemented
 
-- Real AC handler business dispatch is not implemented beyond candidate-only AC0 and AC63/SubAC4 handler skeletons.
-- Real account authentication, login response, character list response, character selection, enter-map response, movement broadcast, inventory, equipment, NPC, quests, warp, and battle are not implemented.
+- Real account authentication is not implemented.
+- Real database access is not implemented.
+- Real login response generation is not implemented.
+- Character list response, character selection, enter-map response, movement broadcast, inventory, equipment, NPC, quests, warp, and battle are not implemented.
 - GUI management functionality is not implemented beyond the existing minimal WPF shell.
-- TCP receive, session update, and host smoke tests use synthetic traffic only and do not confirm target-client behavior.
-- SendPipeline does not generate login, enter-map, movement, or gameplay responses.
-- ProtocolTrace state-change enrichment records candidate state transitions only; it does not confirm target-client behavior.
-- No real capture tool was implemented.
-- No real trace, pcap, pcapng, har, database, password, token, IP, device identifier, or personal data was added.
+- Login request field parsing remains opaque and pending target-client trace.
+- No real account, password, token, session key, cookie, database, trace, pcap, pcapng, har, IP, device identifier, or personal data was added.
 
 ## Current Blockers
 
 - Real target-client packet traces are not yet available.
+- Login request field layout is still unknown and must not be guessed as confirmed.
 - Real handlers require explicit future tasks and review approval.
 
 ## Next Suggested Task
 
-TASK-0024-implement-account-repository-skeleton
+TASK-0025-implement-login-request-field-parser-candidates

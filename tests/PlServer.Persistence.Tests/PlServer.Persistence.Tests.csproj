@@ -23,9 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\PlServer.Application\PlServer.Application.csproj" />
     <ProjectReference Include="..\..\src\PlServer.Core\PlServer.Core.csproj" />
-    <ProjectReference Include="..\..\src\PlServer.LegacyProtocol\PlServer.LegacyProtocol.csproj" />
-    <ProjectReference Include="..\..\src\PlServer.Protocol\PlServer.Protocol.csproj" />
-    <ProjectReference Include="..\..\src\PlServer.Session\PlServer.Session.csproj" />
+    <ProjectReference Include="..\..\src\PlServer.Persistence\PlServer.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
