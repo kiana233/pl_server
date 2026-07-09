@@ -34,6 +34,10 @@ public sealed class ProtocolTraceEvent
 
     public string? Handler { get; init; }
 
+    public string? HandlerStatus { get; init; }
+
+    public IReadOnlyList<string> HandlerNotes { get; init; } = Array.Empty<string>();
+
     public string? RouteStatus { get; init; }
 
     public string Result { get; init; } = string.Empty;
@@ -71,6 +75,8 @@ public sealed class ProtocolTraceEvent
             ProtocolName = ProtocolName,
             Behavior = Behavior,
             Handler = Handler,
+            HandlerStatus = HandlerStatus,
+            HandlerNotes = HandlerNotes,
             RouteStatus = RouteStatus,
             Result = Result,
             SourceLabel = SourceLabel,

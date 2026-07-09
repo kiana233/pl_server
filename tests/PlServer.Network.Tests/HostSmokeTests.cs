@@ -36,6 +36,9 @@ public sealed class HostSmokeTests
             "HandshakeDone",
             "HandshakeCandidate",
             wasStateChanged: true);
+        Assert.Contains(nameof(HandshakeCandidateHandler), fixture.ResolvedHandlerNames);
+        Assert.Equal(nameof(HandshakeCandidateHandler), Assert.Single(fixture.TraceSink.Events).Handler);
+        Assert.Equal(ActionHandlerStatus.CandidateHandled.ToString(), Assert.Single(fixture.TraceSink.Events).HandlerStatus);
     }
 
     [Fact]
@@ -57,6 +60,9 @@ public sealed class HostSmokeTests
             "LoginPending",
             "LoginRequestCandidate",
             wasStateChanged: true);
+        Assert.Contains(nameof(LoginRequestCandidateHandler), fixture.ResolvedHandlerNames);
+        Assert.Equal(nameof(LoginRequestCandidateHandler), fixture.TraceSink.Events[1].Handler);
+        Assert.Equal(ActionHandlerStatus.CandidateHandled.ToString(), fixture.TraceSink.Events[1].HandlerStatus);
     }
 
     [Fact]
@@ -193,6 +199,26 @@ public sealed class HostSmokeTests
     }
 
     [Fact]
+    public async Task Host_trace_contains_candidate_handler_name_status_and_notes()
+    {
+        await using var fixture = new HostSmokeTestFixture();
+        await fixture.StartAsync();
+        await using var client = await fixture.ConnectClientAsync();
+
+        await client.SendChunksAsync(
+            HostSmokeTestFixture.Frame(0x00, 0x01),
+            HostSmokeTestFixture.Frame(0x63, 0x04));
+
+        Assert.True(await fixture.WaitForTraceCountAsync(2));
+        var loginTrace = fixture.TraceSink.Events[1];
+        Assert.Equal(nameof(LoginRequestCandidateHandler), loginTrace.Handler);
+        Assert.Equal(ActionHandlerStatus.CandidateHandled.ToString(), loginTrace.HandlerStatus);
+        Assert.Contains(loginTrace.HandlerNotes, note => note.Contains("pending target-client trace", StringComparison.OrdinalIgnoreCase));
+        Assert.NotEqual(ProtocolTraceSourceLabel.TraceClient, loginTrace.SourceLabel);
+        Assert.NotEqual(ProtocolTraceStatus.Confirmed, loginTrace.Status);
+    }
+
+    [Fact]
     public async Task Host_does_not_send_login_response_automatically()
     {
         await using var fixture = new HostSmokeTestFixture();
@@ -210,7 +236,7 @@ public sealed class HostSmokeTests
     }
 
     [Fact]
-    public async Task Host_uses_empty_action_handler_registry_so_no_real_ac_handler_is_invoked()
+    public async Task Host_invokes_candidate_handlers_without_real_account_authentication()
     {
         await using var fixture = new HostSmokeTestFixture();
         await fixture.StartAsync();
@@ -222,7 +248,12 @@ public sealed class HostSmokeTests
 
         Assert.True(await fixture.WaitForSessionStateAsync(SessionState.LoginPending));
         Assert.True(fixture.HandlerResolveCount >= 2);
-        Assert.Equal(0, fixture.HandlerRegisterCount);
+        Assert.Equal(2, fixture.HandlerRegisterCount);
+        Assert.Contains(nameof(HandshakeCandidateHandler), fixture.ResolvedHandlerNames);
+        Assert.Contains(nameof(LoginRequestCandidateHandler), fixture.ResolvedHandlerNames);
+        Assert.DoesNotContain(
+            fixture.TraceSink.Events.SelectMany(traceEvent => traceEvent.HandlerNotes),
+            note => note.Contains("authenticated", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]

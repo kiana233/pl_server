@@ -17,6 +17,7 @@ internal sealed class HostSmokeTestFixture : IAsyncDisposable
         TraceSink = new InMemoryProtocolTraceSink();
         ConnectionRegistry = new ConnectionRegistry();
         _handlerRegistry = new RecordingActionHandlerRegistry();
+        RegisterCandidateHandlers(_handlerRegistry);
         Host = new TcpServerHost(
             new TcpServerOptions { Port = 0 },
             ConnectionRegistry,
@@ -32,6 +33,8 @@ internal sealed class HostSmokeTestFixture : IAsyncDisposable
     public int HandlerResolveCount => _handlerRegistry.ResolveCount;
 
     public int HandlerRegisterCount => _handlerRegistry.RegisterCount;
+
+    public IReadOnlyList<string> ResolvedHandlerNames => _handlerRegistry.ResolvedHandlerNames;
 
     public IPEndPoint BoundEndPoint => Assert.IsType<IPEndPoint>(Host.BoundEndPoint);
 
@@ -101,6 +104,19 @@ internal sealed class HostSmokeTestFixture : IAsyncDisposable
         return new ReceivePipeline(routePipeline);
     }
 
+    private static void RegisterCandidateHandlers(IActionHandlerRegistry registry)
+    {
+        registry.Register(new ActionHandlerDescriptor(
+            new LegacyProtocolKey(0x00, null),
+            nameof(HandshakeCandidateHandler),
+            new HandshakeCandidateHandler()));
+
+        registry.Register(new ActionHandlerDescriptor(
+            new LegacyProtocolKey(0x63, 0x04),
+            nameof(LoginRequestCandidateHandler),
+            new LoginRequestCandidateHandler()));
+    }
+
     private static async Task<bool> WaitUntilAsync(Func<bool> predicate)
     {
         var deadline = DateTimeOffset.UtcNow.AddSeconds(5);
@@ -154,22 +170,33 @@ internal sealed class HostSmokeTestFixture : IAsyncDisposable
 
     private sealed class RecordingActionHandlerRegistry : IActionHandlerRegistry
     {
+        private readonly Dictionary<LegacyProtocolKey, ActionHandlerDescriptor> _handlers = new();
+        private readonly List<string> _resolvedHandlerNames = new();
+
         public int ResolveCount { get; private set; }
 
         public int RegisterCount { get; private set; }
+
+        public IReadOnlyList<string> ResolvedHandlerNames => _resolvedHandlerNames.ToArray();
 
         public void Register(ActionHandlerDescriptor descriptor)
         {
             ArgumentNullException.ThrowIfNull(descriptor);
             RegisterCount++;
+            _handlers.Add(descriptor.ContractKey, descriptor);
         }
 
         public bool TryResolve(LegacyProtocolContract contract, out ActionHandlerDescriptor? descriptor)
         {
             ArgumentNullException.ThrowIfNull(contract);
             ResolveCount++;
-            descriptor = null;
-            return false;
+            var found = _handlers.TryGetValue(contract.Key, out descriptor);
+            if (found && descriptor is not null)
+            {
+                _resolvedHandlerNames.Add(descriptor.HandlerName);
+            }
+
+            return found;
         }
     }
 }

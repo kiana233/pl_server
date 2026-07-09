@@ -41,6 +41,8 @@ public static class ProtocolTraceFormatter
             ["protocolName"] = traceEvent.ProtocolName,
             ["behavior"] = traceEvent.Behavior,
             ["handler"] = traceEvent.Handler,
+            ["handlerStatus"] = traceEvent.HandlerStatus,
+            ["handlerNotes"] = traceEvent.HandlerNotes.ToArray(),
             ["routeStatus"] = traceEvent.RouteStatus,
             ["result"] = traceEvent.Result,
             ["sourceLabel"] = FormatSourceLabel(traceEvent.SourceLabel),
