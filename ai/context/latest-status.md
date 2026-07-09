@@ -1,22 +1,22 @@
 # Latest Status
 
-Date: 2026-07-08
+Date: 2026-07-09
 
 ## Phase
 
-Phase 13 / Login and handshake candidate handlers completed.
+Phase 14 / Sanitized target-client trace capture guide completed.
 
 ## Last Completed Task
 
-`ai/tasks/TASK-0022-implement-login-handshake-candidate.md`
+`ai/tasks/TASK-0023-implement-sanitized-target-client-trace-capture-guide.md`
 
 ## Active Task
 
-None. Waiting for ChatGPT review and TASK-0023 creation.
+None. Waiting for ChatGPT review and TASK-0024 creation.
 
 ## Current Goal
 
-Prepare to write sanitized target-client trace capture guidelines or an account repository skeleton in TASK-0023.
+Prepare to implement an account repository skeleton or login response contract candidates in TASK-0024.
 
 ## Current Constraints
 
@@ -30,9 +30,11 @@ Prepare to write sanitized target-client trace capture guidelines or an account 
 - Connection session updates are candidate-only and do not execute login or gameplay behavior.
 - Packet trace events can carry candidate session previous/current state, state-change flag, rejection reason, errors, and notes.
 - AC0 and AC63/SubAC4 candidate handlers only record candidate handling and never authenticate accounts or generate response packets.
+- Real target-client trace must be sanitized, replayable, and human reviewed before evidence promotion.
+- Synthetic tests and reference behavior still cannot be marked confirmed.
 - Host smoke tests do not generate login, enter-map, movement, or gameplay response packets.
 - Codex may commit and push task branches, but must not merge `main` without ChatGPT review approval.
 
 ## Next Suggested Task
 
-`TASK-0023-implement-sanitized-target-client-trace-capture-guide`
+`TASK-0024-implement-account-repository-skeleton`

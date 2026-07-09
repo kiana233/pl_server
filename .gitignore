@@ -44,5 +44,10 @@ Resources/
 
 # Allow explicitly curated trace folders, but keep raw captures out by default.
 traces/raw/
+traces/private/
+traces/unreviewed/
+traces/**/*.real.jsonl
+traces/**/*.private.jsonl
 *.pcap
 *.pcapng
+*.har
