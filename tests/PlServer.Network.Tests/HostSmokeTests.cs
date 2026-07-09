@@ -219,6 +219,32 @@ public sealed class HostSmokeTests
     }
 
     [Fact]
+    public async Task Synthetic_login_candidate_trace_contains_parser_status_without_sensitive_fields()
+    {
+        await using var fixture = new HostSmokeTestFixture();
+        await fixture.StartAsync();
+        await using var client = await fixture.ConnectClientAsync();
+
+        await client.SendChunksAsync(
+            HostSmokeTestFixture.Frame(0x00, 0x01),
+            HostSmokeTestFixture.Frame(0x63, 0x04));
+
+        Assert.True(await fixture.WaitForSessionStateAsync(SessionState.LoginPending));
+        Assert.True(await fixture.WaitForTraceCountAsync(2));
+        var loginTrace = fixture.TraceSink.Events[1];
+        var notes = string.Join(" ", loginTrace.HandlerNotes);
+
+        Assert.Contains("parser status", notes, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("OpaquePayload", notes, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("field layout unknown", notes, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("pending target-client trace", notes, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("no password/token emitted", notes, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("trace:client", notes, StringComparison.OrdinalIgnoreCase);
+        Assert.NotEqual(ProtocolTraceSourceLabel.TraceClient, loginTrace.SourceLabel);
+        Assert.NotEqual(ProtocolTraceStatus.Confirmed, loginTrace.Status);
+    }
+
+    [Fact]
     public async Task Host_does_not_send_login_response_automatically()
     {
         await using var fixture = new HostSmokeTestFixture();
@@ -233,6 +259,30 @@ public sealed class HostSmokeTests
 
         Assert.Empty(await client.ReadAvailableAsync());
         Assert.Equal(0, client.AvailableBytes);
+    }
+
+    [Fact]
+    public async Task Synthetic_login_candidate_does_not_produce_login_or_character_list_response_bytes()
+    {
+        await using var fixture = new HostSmokeTestFixture();
+        await fixture.StartAsync();
+        await using var client = await fixture.ConnectClientAsync();
+
+        await client.SendChunksAsync(
+            HostSmokeTestFixture.Frame(0x00, 0x01),
+            HostSmokeTestFixture.Frame(0x63, 0x04));
+        Assert.True(await fixture.WaitForSessionStateAsync(SessionState.LoginPending));
+        Assert.True(await fixture.WaitForTraceCountAsync(2));
+        await Task.Delay(100);
+
+        Assert.Empty(await client.ReadAvailableAsync());
+        Assert.Equal(0, client.AvailableBytes);
+        Assert.Contains(
+            fixture.TraceSink.Events[1].HandlerNotes,
+            note => note.Contains("no login response packet generated", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(
+            fixture.TraceSink.Events[1].HandlerNotes,
+            note => note.Contains("no character list generated", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -254,6 +304,9 @@ public sealed class HostSmokeTests
         Assert.DoesNotContain(
             fixture.TraceSink.Events.SelectMany(traceEvent => traceEvent.HandlerNotes),
             note => note.Contains("authenticated", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(
+            fixture.TraceSink.Events.SelectMany(traceEvent => traceEvent.HandlerNotes),
+            note => note.Contains("account repository not invoked", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
