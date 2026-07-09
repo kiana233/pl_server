@@ -309,6 +309,20 @@ public sealed class HostSmokeTests
         Assert.Contains(
             fixture.TraceSink.Events[1].HandlerNotes,
             note => note.Contains("response plan should generate packet: False", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(
+            fixture.TraceSink.Events[1].HandlerNotes,
+            note => note.Contains("character list planning status", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(
+            fixture.TraceSink.Events[1].HandlerNotes,
+            note => note.Contains("character list should generate packet: False", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(
+            fixture.TraceSink.Events[1].HandlerNotes,
+            note => note.Contains("no character selection response generated", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(
+            fixture.TraceSink.Events[1].HandlerNotes,
+            note => note.Contains("no enter-map response generated", StringComparison.OrdinalIgnoreCase));
+        Assert.NotEqual(ProtocolTraceSourceLabel.TraceClient, fixture.TraceSink.Events[1].SourceLabel);
+        Assert.NotEqual(ProtocolTraceStatus.Confirmed, fixture.TraceSink.Events[1].Status);
     }
 
     [Fact]
