@@ -1,10 +1,10 @@
 # Current State
 
-Date: 2026-07-08
+Date: 2026-07-09
 
 ## Current Phase
 
-Phase 13 / Login And Handshake Candidate Handlers
+Phase 14 / Sanitized Target Client Trace Capture Guide
 
 ## Repository Paths
 
@@ -15,7 +15,7 @@ Phase 13 / Login And Handshake Candidate Handlers
 ## Current GitHub Visible State
 
 - Remote: `origin https://github.com/kiana233/pl_server.git`
-- Task branch: `task/0022-implement-login-handshake-candidate`
+- Task branch: `task/0023-implement-sanitized-target-client-trace-capture-guide`
 - Base branch: `main`
 
 ## Current Local Scan State
@@ -32,7 +32,8 @@ Phase 13 / Login And Handshake Candidate Handlers
 - TASK-0019 implemented connection-level SessionState update pipeline.
 - TASK-0020 implemented Host-level smoke tests and a synthetic TCP client test utility.
 - TASK-0021 implemented ProtocolTrace state-change enrichment.
-- TASK-0022 implements login / handshake candidate handlers.
+- TASK-0022 implemented login / handshake candidate handlers.
+- TASK-0023 establishes sanitized target-client trace capture, sanitization, and evidence promotion guidance.
 
 ## Implemented Content
 
@@ -44,8 +45,10 @@ Phase 13 / Login And Handshake Candidate Handlers
 - `PlServer.Application` contains ActionRouter skeleton, candidate handler result models, AC0 HandshakeCandidate handler, and AC63/SubAC4 LoginRequestCandidate handler.
 - `PlServer.Network` contains TCP host skeleton, frame splitter, connection receive loop, receive pipeline, packet route pipeline, and connection session updater.
 - `tests/PlServer.Network.Tests` contains synthetic TCP client host smoke coverage.
+- `docs` contains target-client trace capture, sanitization, and evidence promotion policies.
+- `traces/templates` contains fake sample-only JSONL schema examples.
 
-## Login And Handshake Candidate Handler Scope
+## Sanitized Target Client Trace Scope
 
 - Synthetic TCP client tests connect to `TcpServerHost` on loopback port 0.
 - Host smoke tests exercise `TcpServerHost -> ConnectionReceiveLoop -> PacketFrameReadBuffer -> ReceivePipeline -> PacketCodec -> ProtocolTraceLogger -> ActionRouter skeleton -> ConnectionSessionUpdater`.
@@ -61,6 +64,10 @@ Phase 13 / Login And Handshake Candidate Handlers
 - Each packet trace can carry session previous state, current state, packet kind, state-change flag, rejection reason, transition errors, and notes.
 - Movement-before-map and invalid-packet traces record no false state change.
 - Synthetic client traffic is explicitly not target-client trace and does not confirm protocol facts.
+- Real target-client trace is still absent from the repository.
+- Any trace entering the repository must be sanitized first.
+- Synthetic tests still cannot be promoted to confirmed.
+- Only sanitized, replayable, human-reviewed target-client trace can support evidence promotion.
 
 ## Not Implemented
 
@@ -70,6 +77,8 @@ Phase 13 / Login And Handshake Candidate Handlers
 - TCP receive, session update, and host smoke tests use synthetic traffic only and do not confirm target-client behavior.
 - SendPipeline does not generate login, enter-map, movement, or gameplay responses.
 - ProtocolTrace state-change enrichment records candidate state transitions only; it does not confirm target-client behavior.
+- No real capture tool was implemented.
+- No real trace, pcap, pcapng, har, database, password, token, IP, device identifier, or personal data was added.
 
 ## Current Blockers
 
@@ -78,4 +87,4 @@ Phase 13 / Login And Handshake Candidate Handlers
 
 ## Next Suggested Task
 
-TASK-0023-implement-sanitized-target-client-trace-capture-guide
+TASK-0024-implement-account-repository-skeleton
