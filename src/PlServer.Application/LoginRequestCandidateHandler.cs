@@ -35,6 +35,7 @@ public sealed class LoginRequestCandidateHandler : IActionHandler
                 "login request candidate-only handler invoked",
                 "pending target-client trace",
                 "payload kept opaque; no account authentication performed",
+                "account repository not invoked because login payload fields are opaque",
                 "no login response packet generated",
                 "no character list generated",
                 $"ac: {context.Ac}",

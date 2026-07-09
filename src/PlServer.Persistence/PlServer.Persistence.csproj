@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\PlServer.Application\PlServer.Application.csproj" />
     <ProjectReference Include="..\PlServer.Core\PlServer.Core.csproj" />
   </ItemGroup>
 
